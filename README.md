@@ -1,6 +1,6 @@
 # Model-Driven Markdown `(md^2)`
 
-A tool for creating interactive markdown documents.
+A remark plugin for creating interactive markdown documents.
 
 ---
 
@@ -23,7 +23,7 @@ When [rendered](), `[3 cookies](cookies=[0..100])` is replaced with a slider fro
 
 ## Notation
 
-The format is based on the syntax for links and images, so it's backwards compatible with normal markdown (if you can ignore broken links). GitHub renders the above as follows:
+The format is based on the syntax for links and images, so it's backwards compatible with normal Markdown (if you can ignore broken links). GitHub renders the above as follows:
 
 > When you eat [3 cookies](cookies=[0..100]), you consume **[150 calories](calories=50*cookies)**. That's [7.5%](daily_percent=calories/2000) of your recommended daily calories.
 
@@ -35,6 +35,9 @@ See [the reference](/docs/reference.md) for a full account of different types of
 
 TODO: Write this out
 
+## Security
+
+
 ## Contribute
 
 
@@ -42,7 +45,7 @@ TODO: Write this out
 
 - [Jesse Hoogland](https://jessehoogland.com)
 
-The concepts and notation are heavily inspired by a bunch of different projects:
+The concepts and notation are inspired by a bunch of different projects:
 
 - 🙌 **[Tangle](http://worrydream.com/Tangle/guide.html)** by [Bret Victor](http://worrydream.com/) is at the root of all of these projects.
 - [Active Markdown](https://github.com/alecperkins/active-markdown) by [Alec Perkins](https://github.com/alecperkins) most inspired the syntax.
@@ -52,4 +55,4 @@ The concepts and notation are heavily inspired by a bunch of different projects:
 
 ## License
 
-[MIT License]()
+[MIT]() © Jesse Hoogland 

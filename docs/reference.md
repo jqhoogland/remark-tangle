@@ -20,21 +20,23 @@
 
 Model-driven Markdown is built around "**fields**," which use a special instance of the notation for links in regular Markdown. 
 
-There are (1) **definition fields**, which define a new variable, such as: 
+There are (1) **definition fields**, which define a new variable, such as
 
 `[display string](new_variable=configuration)`,
 
-and (2) **reference fields**, which display an already defined variable, such as:
+and (2) **reference fields**, which display an already defined variable, such as
 
-`[display_string](old_variable)`
+`[display_string](old_variable)`.
 
 Just like the text content of a link or the alt text for an image, `display string` tells the MDMD interpreter how to display `new_variable` or `old_variable`. It may also determine the default (or fallback) value for that variable. The `configuration` in a definition field determines what kind of field it is. 
+
+> Note: for model-driven markdown to correctly distinguish links from fields, your href should start with either `http` or `/`.
 
 ## Definition Fields
 
 There are two kinds of definition fields:
-- **Input fields**: directly adjustable by users.
-- **Output fields**: not directly adjustable by users. 
+- **Input fields**
+- **Output fields**
 
 ### Input Fields
 
@@ -42,7 +44,7 @@ Input fields define variables that users can directly change by clicking, draggi
 
 There are currently two types of input fields:
 
-- **Range Inputs**:
+- **Range Inputs**
 - **Select Inputs**
 
 #### Range Inputs
@@ -140,16 +142,16 @@ The numbers in a display string serve two purposes:
    - `50` would hide the decimal point, etc.
 
 Behind the scenes, the display number is converted to a "format specifier" similar (but not exactly the same) as [printf-style strings in C](https://www.cplusplus.com/reference/cstdio/printf/):
-- `%d` for a signed decimal integer (e.g., `1`, `1000`, `0`)
-- `%'d` to display large decimal integers with a comma or period every 3 decimal places (depending on locale) (e.g., `1`, `1,000`, `0`)
-- `%.xf` for a signed float with `x` digits after the decimal point. 
-  (e.g., `%.2f->1.0`, `%.1f->1000.0`, `%.0f->0.`)
-- `%'.xf` to combine the previous two.
+- `%d` for a signed decimal integer (e.g., `1`, `1000`, `0`).
+- `%'d` to display large decimal integers with a comma or period every 3 decimal places (depending on locale) (e.g., `1`, `1,000`, `0`).
+- `%.xf` for a signed float with `x` digits after the decimal point
+  (e.g., `%.2f->1.0`, `%.1f->1000.0`, `%.0f->0.`).
+- `%'.xf` combines `%'d` and `%.xf`.
 - `%s` for a string of characters (useful with, e.g, the select input).
 
-If you want, you can skip inputting a default value, and use one of these format specifiers directly. (E.g., `[%d calories](calories_per_day)`). You might consider doing this specifically for output definitions or references where it quickly becomes tedious to find the right numbers. Still, I recommend you include a default value as a fallback when Model-Driven Markdown is unavailable.
+If you want, you can skip inputting a default value, and use one of these format specifiers directly. (E.g., `[%d calories](calories_per_day)`). This will save you time with output definitions or references where it quickly becomes tedious to compute or look up the right numbers. The only disadvantage is that you'll lose a fallback valuee when Model-Driven Markdown is unavailable.
 
-To make this easier, I've included a little helper function (TODO) that takes a Model-Driven Markdown file and replaces all explicit format specifiers with their default values. Then, while writing, you can use the easier format strings and avoid having to do any calculations beforehand, then before publishing, you can run the helper function, so that the published document has appropriate fallback values.
+> To make this easier, I've included a little helper function (TODO) that takes a Model-Driven Markdown file and replaces all explicit format specifiers with their default values. While writing, you can use the easier format specifiers, then before publishing, you can run the helper function, so the published document has appropriate fallback values.
 
 ## Customizing Notation
 
@@ -158,13 +160,13 @@ I had a few major motivations in choosing the notation to be what it is:
 2. Backwards compatibility: Model-Driven Markdown should still look pretty when rendered by a standard interpreter.
 3. Inline calculations: Unlike in Active Markdown, you should be able to define computations inline.
 
-Sometimes these motivations clash. For example, I've tried to avoid including spaces in the variable definitions because this confuses some markdown interpreters, but it can make computations a bit muddier. 
+Sometimes these motivations clash. For example, I've tried to avoid including spaces in the variable definitions because this confuses some markdown interpreters, but it can make computations less clear. 
 
-Another example is that I think that being able to do calculations in separate code blocks is a great idea (that I should get to implementing at some point). But then how best to reconcile this with inline calculations?
+Another example is that I think that being able to do calculations in separate code blocks (as in active markdown) is a great idea (that I should get to implementing at some point). But then how best to reconcile this with inline calculations?
 
 In the vein of this entire project (that we should be free to explore tradeoffs like these on our own), there's one more major theme I'd like to highlight: Customizabilty.
 
-If anyone disagrees with my choices, they should be able to easily configure their own syntax/interpreter. So, here are som other options:
+If anyone disagrees with my choices, they should be able to easily configure their own syntax/interpreter. So, here are som other options...
 
 ### Wiki-link-style fields
 
@@ -175,7 +177,6 @@ For any users of Obsidian, Roam, etc., you'll be happy to know that you can use 
 with
 
 `[[some_variable=configuration|text representation]]`.
-
 
 ### Active-Markdown-style fields 
 
@@ -191,7 +192,7 @@ The changes are:
 - ` by ` instead of `;` and ` or ` instead of `,`.
 - No option for inline computations to define output fields. Calculations are meant to be performed in separate code blocks.
 
-If you're worried about Obsidian or Rome incorrectly indexing your variable definitions and references as links, then curly brackets liek these are a great alternative to consider. As for the other stylistic differences, you can set the flag `format=active-markdown`. 
+If you're worried about Obsidian or Rome incorrectly indexing your variable definitions and references as links, then curly brackets like these are a great alternative to consider. As for the other stylistic differences, you can set the flag `format=active-markdown`. 
 
 ### Other
 
