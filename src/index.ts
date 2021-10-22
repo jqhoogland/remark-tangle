@@ -16,7 +16,9 @@ function getGuid() {
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
 
-function getDisplayTemplate(displayString: string):[(null | string | number), string] {
+function getDisplayTemplate(displayString: string, attributes: {}):[(null | string | number), string, []] {
+  if (!displayString) return [null, "%s", []];
+
   // If the display format includes an explicit fstring (e.g., `%.0f`, `%'d`, `%s`), return as is
   if (displayString.match(/(%('?)(.\d+)?[sdf])/)?.[0] === undefined) {
     // See if the display format includes a number (e.g., `100`, `1000.0`, `1,000.0`)
@@ -33,15 +35,22 @@ function getDisplayTemplate(displayString: string):[(null | string | number), st
       // TODO: Add an option for `%'d` and `$'f` (to display `1000` as `1,000`)
       const fstring = `%${includeCommas ? "" : ""}${precision !== undefined ? `.${precision}f` : "d" }`
 
-      return [defaultValue, displayString.replace(defaultValueString,fstring )]
+      return [defaultValue, displayString.replace(defaultValueString,fstring ), []]
     } else {
       // TODO: Add support for string-valued variables
       // NOTE: use TKSwitch
-      return [null, displayString];
+      const choices = attributes?.["data-choices"] ?? []
+
+      const defaultValue = choices?.findIndex(choice => displayString.includes(choice));
+      return [
+        defaultValue,
+        displayString.replace(choices[defaultValue], "%s"),
+        choices.map(choice => ({type: "span", children: [{type: "text", value: choice}]}))
+      ];
     }
   }
 
-  return [null, displayString]
+  return [null, displayString, []]
 }
 
 /**
@@ -59,92 +68,147 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
     return (tree) => {
 
       visit(tree, (node) => {
-        if ((
-          node.type === 'textDirective' ||
-          node.type === 'leafDirective' ||
-          node.type === 'containerDirective'
-        ) && (node.name === options.start)) {
 
-            // BASIC FIELD PROPERTIES
+        if (
+          (node.type === 'textDirective' || node.type === "leafDirective")
+         && node.name === options.start) {
 
-            const data = node.data || (node.data = {})
+          // BASIC FIELD PROPERTIES
 
-            const [name, ...styleKeys] = Object.keys(node.attributes);
-            names.add(name)
+          const data = node.data || (node.data = {})
 
-            const formula = node.attributes[name] ?? "";
-            const fieldType = (formula === "") ? "reference" : "definition";
+          const [name, ...styleKeys] = Object.keys(node.attributes);
+          names.add(name)
 
-            const attributes = {
-              "data-var": name,
-              "data-type": fieldType,
-            };
+          const formula = node.attributes[name] ?? "";
+          const fieldType = (formula === "") ? "reference" : "definition";
 
-            if (styleKeys.length > 0) {
-              attributes.style = {}
-              styleKeys.forEach((key:string) => {
-                attributes.style[key] = node.attributes[key]
-              })
+          const attributes = {
+            "data-var": name,
+            "data-type": fieldType,
+          };
+
+          if (styleKeys.length > 0) {
+            attributes.style = {}
+            styleKeys.forEach((key:string) => {
+              attributes.style[key] = node.attributes[key]
+            })
+          }
+
+          //  VARIABLE DEFINITIONS
+
+          if (fieldType === "definition") {
+
+            // Extract any parameters specific to this type of field.
+            const rangeMatch = formula.match(/\[((?:\w?\d?)*)\.{2,3}((?:\w?\d?)*);?((?:\w?\d?)*)\]/)
+            const selectMatch = formula.match(/\[((?:(\d?\w?)+,?\s*)+)\]/);
+
+            if (rangeMatch !== null) { // ----------------- RANGE INPUT FIELD
+              const [_, min, max, step] = rangeMatch
+              attributes["data-min"] = parseInt(min);
+              attributes["data-max"] = parseInt(max);
+              attributes["data-step"] = parseInt(step);
+              variableClasses[name] = "TKAdjustableNumber";
+
+            } else if (selectMatch !== null) { // -------- SELECT INPUT FIELD
+              const choices = selectMatch?.[1].split(",");
+              attributes["data-choices"] = choices;
+              variableClasses[name] = "TKSwitch";
+
+            } else { // ---------------------------------------- OUTPUT FIELD
+              attributes["data-formula"] = formula;
+              outputFormulas[name] = formula;
+              variableClasses[name] = "TKOutput";
+
+              const id = getGuid()
+              outputIds[name] = id;
+              attributes.id = id;
             }
+          }
 
-            //  VARIABLE DEFINITIONS
+          if (node.type === "leafDirective"
+            && node.name === options.start) {
 
-            if (fieldType === "definition") {
+            const nodeCopy = {...node, type: "textDirective"};
 
-              // Extract any parameters specific to this type of field.
-              const rangeMatch = formula.match(/\[((?:\w?\d?)*)\.{2,3}((?:\w?\d?)*);?((?:\w?\d?)*)\]/)
-              const selectMatch = formula.match(/\[((?:(\d?\w?)+,?\s*)+)\]/);
+            const isOutput = !!outputFormulas[name]
 
-              if (rangeMatch !== null) { // ----------------- RANGE INPUT FIELD
-                const [_, min, max, step] = rangeMatch
-                attributes["data-min"] = parseInt(min);
-                attributes["data-max"] = parseInt(max);
-                attributes["data-step"] = parseInt(step);
-                variableClasses[name] = "TKAdjustableNumber";
-
-              } else if (selectMatch !== null) { // -------- SELECT INPUT FIELD
-                const choices = selectMatch?.[1].split(",");
-                attributes["data-choices"] = choices;
-                variableClasses[name] = "TKSwitch";
-
-              } else { // ---------------------------------------- OUTPUT FIELD
-                outputFormulas[name] = formula;
-                variableClasses[name] = "TKOutput";
-
-                const id = getGuid()
-                outputIds[name] = id;
-                attributes.id = id;
+            node.type = "table";
+            node.align = ['left', 'center', 'right'];
+            node.data = { hName: "table"}
+            node.children = [
+              {
+                type: "tableRow",
+                data: { hName: "tr" },
+                children: [
+                  {
+                    type: "tableCell",
+                    data: { hName: "td", hProperties: {class: "TKLabel"} },
+                    children: [{type: "code", value: attributes["data-var"]}]
+                  },
+                  {
+                    type: "tableCell",
+                    data: { hName: "td" },
+                    children: [{type: "text", value: "="}]
+                  },
+                  {
+                    type: "tableCell",
+                    data: { hName: "td" },
+                    children: [isOutput ? { type: "code", value: formula} : nodeCopy]
+                  }
+                ]
               }
-            }
+            ];
 
-            // DEFAULT VALUE & DISPLAY TEMPLATE
+            if (isOutput) node.children.push( {
+              type: "tableRow",
+              data: { hName: "tr" },
+              children: [
+                {
+                  type: "tableCell",
+                  data: { hName: "td",  },
+                  children: [{type: "text", value: ""}]
+                },
+                {
+                  type: "tableCell",
+                  data: { hName: "td" },
+                  children: [{type: "text", value: "="}]
+                },
+                {
+                  type: "tableCell",
+                  data: { hName: "td" },
+                  children: [nodeCopy]
+                }
+              ]
+            })
 
-            const displayString = node.children?.[0]?.value ?? "";
-            const [defaultValue, displayTemplate] = getDisplayTemplate(displayString);
+            return
+          }
 
-            if (fieldType === "definition" && defaultValue !== null) {
-              defaultValues[name] = defaultValue;
-            }
+          // DEFAULT VALUE & DISPLAY TEMPLATE
 
-            attributes["data-format"] = displayTemplate;
-            node.children = [{ type: "text", value: " "}];
+          const displayString = node.children?.[0]?.value ?? "";
+          const [defaultValue, displayTemplate, children] = getDisplayTemplate(displayString, attributes);
+          if (fieldType === "definition" && !defaultValues[name]) {
+            defaultValues[name] = defaultValue;
+          }
 
-            // UPDATE THE SYNTAX TREE
+          attributes["data-format"] = displayTemplate;
 
-            const hast = h("span", attributes)
+          // UPDATE THE SYNTAX TREE
+          const hast = h("span", attributes)
+
             data.hName = hast.tagName
             data.hProperties = hast.properties
+            node.children = children;
 
-        }
       })
 
       // After having visited all the nodes, visit them again to add the appropriate classes & links
       visit(tree, (node) => {
-        if ((
-          node.type === 'textDirective' ||
-          node.type === 'leafDirective' ||
-          node.type === 'containerDirective'
-        ) && (node.name === options.start)) {
+        if (
+          node.type === 'textDirective'
+         && node.name === options.start) {
 
           node.data.hProperties.class = variableClasses[node.data.hProperties.dataVar];
 
@@ -163,14 +227,11 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
       var tangle = new Tangle (document.body, {
         initialize: function () {
 ${Object.keys(defaultValues).map(key => (`          this.${key} = ${defaultValues[key]};`)).join("\n")} 
-
-          console.log({keys: Object.keys(this), values: Object.values(this)})
         },
         update: function () {
           var scope = {${Array.from(names).map((name: string) => `${name}: this.${name}`).join(", ")}}
         
 ${Object.keys(outputFormulas).map(key => (`          this.${key} = math.evaluate("${outputFormulas[key]}", scope);`)).join("\n")}
-          console.log({keys: Object.keys(this), values: Object.values(this)})
        }
       });
       `
@@ -218,10 +279,34 @@ ${Object.keys(outputFormulas).map(key => (`          this.${key} = math.evaluate
         .TKOutput:hover { background-color: #e3eef3;}
         .TKOutput:active { background-color: #4eabff; color: #fff; }
         a.TKOutput { text-decoration: none; }
+        
         .TKAdjustableNumberHelp { color: #0dbe04!important }
         .TKAdjustableNumber { color: #0dbe04; border-bottom: 1px dashed #0dbe04 }
         .TKAdjustableNumber:hover { background-color: #e4ffed }
         .TKAdjustableNumber:active { background-color: #66c563; color: #fff; }
+        
+        .TKLabel pre {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+        .TKLabel { 
+          color: #fff; 
+          display: inline-block;
+          text-align: center;
+          line-height: 1.0;
+          padding-left: 8px;
+          padding-right: 8px;
+          padding-top: 2px;
+          padding-bottom: 3px;
+          border-radius: 20px;
+          border-radius: 20px
+          border: 1px solid #85abbd;
+          background-color: #91b9cc;
+        }
+        .TKLabel:hover {
+          background-color: #5f9bb6;
+          border-color: #6a828e;
+        }
         `,
         data: {
           hName: "style",

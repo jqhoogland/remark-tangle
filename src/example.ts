@@ -10,7 +10,7 @@ import rehypeStringify from 'rehype-stringify'
 
 import tanglePlugin from './index.js'
 
-const buffer = fs.readFileSync('./example.md')
+const buffer = fs.readFileSync('./demo/example.md')
 
 unified()
   .use(remarkParse)
