@@ -46,6 +46,7 @@ function getDisplayTemplate(displayString: string):[(null | string | number), st
 
 /**
  * TODO: Sync hover/active between definitions & references.
+ * TODO: Fix spacing bug (workaround with `margin-right: 1ch`)
  * @param options
  */
 export default function tanglePlugin(this: any, options: Partial<TanglePluginOptions> = defaultTanglePluginOptions) {
@@ -68,7 +69,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
             const data = node.data || (node.data = {})
 
-            const name = Object.keys(node.attributes)?.[0];
+            const [name, ...styleKeys] = Object.keys(node.attributes);
             names.add(name)
 
             const formula = node.attributes[name] ?? "";
@@ -76,9 +77,15 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
             const attributes = {
               "data-var": name,
-              "data-type": fieldType
+              "data-type": fieldType,
             };
 
+            if (styleKeys.length > 0) {
+              attributes.style = {}
+              styleKeys.forEach((key:string) => {
+                attributes.style[key] = node.attributes[key]
+              })
+            }
 
             //  VARIABLE DEFINITIONS
 
@@ -120,7 +127,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
             }
 
             attributes["data-format"] = displayTemplate;
-            node.children = [];
+            node.children = [{ type: "text", value: " "}];
 
             // UPDATE THE SYNTAX TREE
 
@@ -220,8 +227,6 @@ ${Object.keys(outputFormulas).map(key => (`          this.${key} = math.evaluate
           hName: "style",
         }
       })
-
-
 
       // NOTE: This opens you up to XSS attacks. Know what you are doing!
       tree.children.push({
