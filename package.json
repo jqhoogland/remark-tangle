@@ -1,8 +1,8 @@
 {
-  "name": "remark-notebooks",
+  "name": "remark-tangle",
   "version": "0.0.1",
-  "description": "A remark plugin for creating interactive markdown documents.",
-  "main": "remark-notebooks/src/index.js",
+  "description": "A remark plugin for making interactive markdown documents with Tangle.",
+  "main": "dist/index.js",
   "type": "module",
   "directories": {
     "doc": "../docs"
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jqhoogland/model-driven-markdown.git"
+    "url": "git+https://github.com/jqhoogland/remark-tangle.git"
   },
   "author": "Jesse Hoogland",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jqhoogland/model-driven-markdown/issues"
+    "url": "https://github.com/jqhoogland/remark-tangle/issues"
   },
-  "homepage": "https://github.com/jqhoogland/model-driven-markdown#readme",
+  "homepage": "https://github.com/jqhoogland/remark-tangle#readme",
   "dependencies": {
     "fs": "^0.0.1-security",
     "hastscript": "^7.0.2",
