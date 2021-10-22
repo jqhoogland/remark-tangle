@@ -21,6 +21,6 @@ unified()
   .use(rehypeStringify)
   .process(buffer)
   .then((file) => {
-    console.error(reporter(file))
+    // console.error(reporter(file))
     console.log(String(file))
   })

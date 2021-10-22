@@ -1,0 +1,42 @@
+
+<blockquote>
+  <p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" data-format="%d cookies" class="TKAdjustableNumber"></span>, you consume <strong><span data-var="calories" data-type="definition" data-format="%d calories"></span></strong>. That's <span data-var="daily_percent" data-type="reference" data-format="percent"></span>of your recommended daily calories.</p>
+</blockquote>
+<ul>
+  <li><code>cookie</code> =<span data-var="cookie" data-type="definition" data-choices="chocolate_chip oatmeal_raisin ginger_snap" data-format="chocolate_chip cookie" class="TKSwitch"></span></li>
+  <li><code>cookies</code> =<span data-var="cookies" data-type="reference" data-format="%d cookies" class="TKAdjustableNumber"></span></li>
+  <li><code>calories_per_cookie</code> =<span data-var="calories_per_cookie" data-type="definition" data-min="10" data-max="100" data-step="5" data-format="%.0f calories" class="TKAdjustableNumber"></span></li>
+  <li><code>calories</code> =<span data-var="calories" data-type="reference" data-format="%d calories"></span></li>
+  <li><code>daily_calories</code> =<span data-var="calories_per_day" data-type="definition" data-min="0" data-max="10000" data-step="100" data-format="%d calories" class="TKAdjustableNumber"></span></li>
+  <li><code>daily_percent</code> =<span data-var="daily_percent" data-type="definition" data-format="percent"></span></li>
+</ul>
+<pre><script type="text/javascript" src="https://pagecdn.io/lib/mathjs/9.4.4/math.min.js"></script></pre>
+<pre><script type="text/javascript" src="http://worrydream.com/Tangle/Tangle.js"></script></pre>
+<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/TangleKit.js"></script></pre>
+<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/sprintf.js"></script></pre>
+<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/mootools.js"></script></pre>
+<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/BVTouchable.js"></script></pre>
+<pre><link href="http://worrydream.com/Tangle/TangleKit/TangleKit.css" type="text/css" rel="stylesheet"></pre>
+<pre><script class="language-javascript">
+      // setUpTangle();
+      
+      var tangle = new Tangle (document.body, {
+        initialize: function () {
+          this.cookies = 3;
+          this.calories = 150;
+          this.calories_per_cookie = 50;
+          this.calories_per_day = 2000; 
+
+          console.log({keys: Object.keys(this), values: Object.values(this)})
+        },
+        update: function () {
+          var scope = {cookies: this.cookies, calories: this.calories, daily_percent: this.daily_percent, cookie: this.cookie, calories_per_cookie: this.calories_per_cookie, calories_per_day: this.calories_per_day}
+        
+          this.calories = math.evaluate("calories_per_cookie*cookies", scope);
+          this.daily_percent = math.evaluate("calories/calories_per_day", scope);
+          console.log({keys: Object.keys(this), values: Object.values(this)})
+       }
+      });
+      
+</script></pre>
+
