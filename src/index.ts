@@ -9,6 +9,13 @@ const defaultTanglePluginOptions = {
   start: "t"
 }
 
+function getGuid() {
+  const S4 = function() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  };
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
 function getDisplayTemplate(displayString: string):[(null | string | number), string] {
   // If the display format includes an explicit fstring (e.g., `%.0f`, `%'d`, `%s`), return as is
   if (displayString.match(/(%('?)(.\d+)?[sdf])/)?.[0] === undefined) {
@@ -37,22 +44,25 @@ function getDisplayTemplate(displayString: string):[(null | string | number), st
   return [null, displayString]
 }
 
+/**
+ * TODO: Sync hover/active between definitions & references.
+ * @param options
+ */
 export default function tanglePlugin(this: any, options: Partial<TanglePluginOptions> = defaultTanglePluginOptions) {
-  const names = new Set();
-  const defaultValues: Record<string, string | number> = {};
-  const outputFormulas: Record<string, string> = {};
-  const variableClasses: Record<string, string> = {};
+  const names = new Set(); // Keep track of the names so we can correctly initialize Tangle
+  const defaultValues: Record<string, string | number> = {}; // ""
+  const outputFormulas: Record<string, string> = {}; // Keep track of formulas to correctly update Tangle.
+  const outputIds: Record<string, string> = {}; // Keep track of ids to link output references to their definitions.
+  const variableClasses: Record<string, string> = {}; // Keep track of classes for TangleKit.
 
     return (tree) => {
 
       visit(tree, (node) => {
-        if (
+        if ((
           node.type === 'textDirective' ||
           node.type === 'leafDirective' ||
           node.type === 'containerDirective'
-        ) {
-
-          if (node.name === options.start) {
+        ) && (node.name === options.start)) {
 
             // BASIC FIELD PROPERTIES
 
@@ -80,26 +90,25 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
               if (rangeMatch !== null) { // ----------------- RANGE INPUT FIELD
                 const [_, min, max, step] = rangeMatch
-
                 attributes["data-min"] = parseInt(min);
                 attributes["data-max"] = parseInt(max);
                 attributes["data-step"] = parseInt(step);
-
-                variableClasses[name] = "TKAdjustableNumber"
+                variableClasses[name] = "TKAdjustableNumber";
 
               } else if (selectMatch !== null) { // -------- SELECT INPUT FIELD
-                const choices = selectMatch?.[1].split(",")
-
+                const choices = selectMatch?.[1].split(",");
                 attributes["data-choices"] = choices;
-
-                variableClasses[name] = "TKSwitch"
+                variableClasses[name] = "TKSwitch";
 
               } else { // ---------------------------------------- OUTPUT FIELD
-                outputFormulas[name] = formula
+                outputFormulas[name] = formula;
+                variableClasses[name] = "TKOutput";
+
+                const id = getGuid()
+                outputIds[name] = id;
+                attributes.id = id;
               }
-
             }
-
 
             // DEFAULT VALUE & DISPLAY TEMPLATE
 
@@ -111,16 +120,33 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
             }
 
             attributes["data-format"] = displayTemplate;
-            attributes["class"] = variableClasses[name];
             node.children = [];
 
             // UPDATE THE SYNTAX TREE
 
             const hast = h("span", attributes)
-
             data.hName = hast.tagName
             data.hProperties = hast.properties
+
+        }
+      })
+
+      // After having visited all the nodes, visit them again to add the appropriate classes & links
+      visit(tree, (node) => {
+        if ((
+          node.type === 'textDirective' ||
+          node.type === 'leafDirective' ||
+          node.type === 'containerDirective'
+        ) && (node.name === options.start)) {
+
+          node.data.hProperties.class = variableClasses[node.data.hProperties.dataVar];
+
+          // Add a link from output references to the original definitions
+          if (node.data.hProperties.class === "TKOutput" && !node.data.hProperties.id) {
+            node.data.hProperties.href = `#${outputIds[node.data.hProperties.dataVar]}`
+            node.data.hName = "a"
           }
+
         }
       })
 
@@ -177,6 +203,25 @@ ${Object.keys(outputFormulas).map(key => (`          this.${key} = math.evaluate
           }
         }
       })
+
+      tree.children.push({
+        type: "code",
+        value: `
+        .TKOutput { color: #4eabff; border-bottom: 1px dashed #4eabff;}
+        .TKOutput:hover { background-color: #e3eef3;}
+        .TKOutput:active { background-color: #4eabff; color: #fff; }
+        a.TKOutput { text-decoration: none; }
+        .TKAdjustableNumberHelp { color: #0dbe04!important }
+        .TKAdjustableNumber { color: #0dbe04; border-bottom: 1px dashed #0dbe04 }
+        .TKAdjustableNumber:hover { background-color: #e4ffed }
+        .TKAdjustableNumber:active { background-color: #66c563; color: #fff; }
+        `,
+        data: {
+          hName: "style",
+        }
+      })
+
+
 
       // NOTE: This opens you up to XSS attacks. Know what you are doing!
       tree.children.push({
