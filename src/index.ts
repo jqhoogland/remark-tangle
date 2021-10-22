@@ -134,7 +134,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
             const isOutput = !!outputFormulas[name]
 
             node.type = "table";
-            node.align = ['left', 'center', 'right'];
+            node.align = ['left', 'center', 'left'];
             node.data = { hName: "table"}
             node.children = [
               {
@@ -148,7 +148,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
                   },
                   {
                     type: "tableCell",
-                    data: { hName: "td" },
+                    data: { hName: "td", hProperties: { style: "margin-left: 2ch; margin-right: 2ch"} },
                     children: [{type: "text", value: "="}]
                   },
                   {
@@ -171,7 +171,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
                 },
                 {
                   type: "tableCell",
-                  data: { hName: "td" },
+                  data: { hName: "td", hProperties: { style: "margin-left: 2ch; margin-right: 2ch" },
                   children: [{type: "text", value: "="}]
                 },
                 {
@@ -302,6 +302,7 @@ ${Object.keys(outputFormulas).map(key => (`          this.${key} = math.evaluate
           border-radius: 20px
           border: 1px solid #85abbd;
           background-color: #91b9cc;
+          width: "100%";
         }
         .TKLabel:hover {
           background-color: #5f9bb6;
