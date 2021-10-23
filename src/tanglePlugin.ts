@@ -156,6 +156,24 @@ const processFieldDirective = (node: TangleField) => {
     "data-type": fieldType,
   };
 
+  // A special kind of reference has a display string of the kind "`variable_name`".
+  // This will render as an interactive label (hovering will highlight all instances & dependencies)
+  // This is automatically read as a reference even if it includes a definition.
+  if (node.children?.[0]?.type === "inlineCode" && node.children?.[0]?.value === name) {
+
+    // TODO: Dry this up a bit
+    attributes.class = "TKLabel";
+    attributes["data-format"] = "";
+    attributes["data-type"] = "reference";
+    const hast = h("span", attributes)
+
+    node.data = node.data || {}
+    node.data.hName = hast.tagName
+    node.data.hProperties = hast.properties
+
+    return node
+  }
+
   if (styleKeys.length > 0) {
     attributes.style = {}
     styleKeys.forEach((key: string) => {
@@ -208,6 +226,7 @@ const processFieldDirective = (node: TangleField) => {
   node.data = node.data || {}
   node.data.hName = hast.tagName
   node.data.hProperties = hast.properties
+
   node.children = []; // TODO: Add children from TKSwitch
 
   return node;
@@ -232,14 +251,13 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
     visit(tree, (node: MdastNode) => {
 
-      // Process link notation `[...](...)` -> `:t[...]{...}`
+      // (OPTIONAL) Process link notation `[...](...)` -> `:t[...]{...}`
       if (node.type === "link" && isField(node) && options.allowLinkNotation) {
         processFieldShorthand(node, options);
       };
 
       // FIRST PASS
       // Process textDirective (if the directive starts with the correct `options.start` name, by default `"t"`)
-
       if (node.type === "textDirective" && node.name === options.start) {
         processFieldDirective(node);
 
@@ -270,28 +288,26 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
     // SECOND PASS
     // After having visited all the nodes, visit them again to add the appropriate classes & links
-
     visit(tree, (node: MdastNode) => {
       if ( node.type === 'textDirective' && node.name === options.start ) {
 
-        node.data.hProperties.className = variableClasses[node.data.hProperties.dataVar];
+        if (!node.data.hProperties.className?.includes("TKLabel")) {
+          node.data.hProperties.className = variableClasses[node.data.hProperties.dataVar];
 
-        // Add a link from output references to the original definitions
-        if (node.data.hProperties.className === "TKOutput" && !node.data.hProperties.id) {
-          node.data.hProperties.href = `#${outputIds[node.data.hProperties.dataVar]}`
-          node.data.hName = "a"
+          // Add a link from output references to the original definitions
+          if (node.data.hProperties.className?.includes("TKOutput") && !node.data.hProperties.id) {
+            node.data.hProperties.href = `#${outputIds[node.data.hProperties.dataVar]}`
+            node.data.hName = "a"
+          }
         }
-
       }
     })
 
     // ADD TANGLE SET-UP & DEPENDENCIES
-
     // TODO: Get rid of all of these external dependencies.
     addExternalScripts(tree, TANGLE_SCRIPTS);
     addStyleSheets(tree, TANGLE_STYLESHEETS);
     addStyleTag(tree, TANGLE_STYLING);
-
     // NOTE: This opens you up to XSS attacks. Tread carefully!
     const tangleSetUp = createTangleSetUp(Array.from(names), defaultValues, outputFormulas);
     addScript(tree, {value: tangleSetUp})

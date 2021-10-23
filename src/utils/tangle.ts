@@ -41,10 +41,18 @@ a.TKOutput { text-decoration: none; }
   border: 1px solid #85abbd;
   background-color: #91b9cc;
   width: "100%";
+  # flex: 1;
+  # display: flex;
+  # text-align: center;
+  # justify-content: center;
 }
 .TKLabel:hover {
   background-color: #5f9bb6;
   border-color: #6a828e;
+}
+
+.TKLabel span {
+  display: none;
 }
 
 `
