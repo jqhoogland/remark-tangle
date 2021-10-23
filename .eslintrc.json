@@ -1,0 +1,67 @@
+{
+  "ignorePatterns": [],
+  "root": true,
+  "extends": [
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-underscore-dangle": "off",
+    "semi": "always"
+  },
+  "settings": {
+    "jest": {
+      "version": "detect"
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": [
+        "*.jsx",
+        "*.js"
+      ]
+    },
+    {
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
+      "extends": "plugin:@typescript-eslint/recommended",
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/no-var-requires": "warn"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.*",
+        "**/__mocks__/*.*"
+      ],
+      "env": {
+        "jest": true
+        // now **/*.test.js files' env has both es6 *and* jest
+      },
+      // Can't extend in overrides: https://github.com/eslint/eslint/issues/8813
+      "extends": [
+        "plugin:jest/recommended"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "rules": {
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "jest/no-export": "warn"
+      }
+    }
+  ]
+}

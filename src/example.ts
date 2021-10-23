@@ -1,19 +1,19 @@
-import fs from 'fs'
+import fs from 'fs';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkDirective from 'remark-directive';
+import remarkRehype from 'remark-rehype';
+import rehypeFormat from 'rehype-format';
+import rehypeStringify from 'rehype-stringify';
+import remarkGfm from "remark-gfm";
 
-import {reporter} from 'vfile-reporter'
-import {unified} from 'unified'
-import remarkParse from 'remark-parse'
-import remarkDirective from 'remark-directive'
-import remarkRehype from 'remark-rehype'
-import rehypeFormat from 'rehype-format'
-import rehypeStringify from 'rehype-stringify'
+import tanglePlugin from './tanglePlugin';
 
-import tanglePlugin from './index.js'
-
-const buffer = fs.readFileSync('./demo/example.md')
+const buffer = fs.readFileSync('./demo/example.md');
 
 unified()
   .use(remarkParse)
+  .use(remarkGfm)
   .use(remarkDirective)
   .use(tanglePlugin)
   .use(remarkRehype)
@@ -23,4 +23,4 @@ unified()
   .then((file) => {
     // console.error(reporter(file))
     console.log(String(file))
-  })
+  });

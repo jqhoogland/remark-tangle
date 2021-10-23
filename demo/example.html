@@ -1,84 +1,22 @@
 
-<br/>
-
 <blockquote>
-  <p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" data-format="%d cookies" class="TKAdjustableNumber"></span>, you consume <strong><a data-var="calories" data-type="reference" data-format="%d calories" class="TKOutput" href="#0d60f880-ef75-444e-26a1-952a7a127b96"></a></strong>. That's <a data-var="daily_percent" data-type="reference" style="margin-right: 0.5ch" data-format="percent" class="TKOutput" href="#48d7dfdb-af8a-be63-00f9-4bfec3ae232e"></a>of your recommended daily calories.</p>
+  <p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" class="TKAdjustableNumber" data-default="3" data-format="%d cookies"></span>, you consume <strong><span data-var="calories" data-type="reference" data-default="150" data-format="%d calories" class="TKOutput"></span></strong>. That's <span data-var="daily_percent" data-type="reference" style="margin-right: 0.5ch" data-default="-1" data-format="percent" class="TKOutput"></span>of your recommended daily calories.</p>
 </blockquote>
-
-<blockquote>
 <table>
   <thead>
     <tr>
-      <td align="left" class="TKLabel">
-        <pre><code>cookies
-</code></pre>
-      </td>
-      <td align="center" style="[object Object]">=</td>
-      <td align="left"><span data-var="cookies" data-type="reference" data-format="%d cookies" class="TKAdjustableNumber"></span></td>
-    </tr>
-  </thead>
-  <thead>
-    <tr>
-      <td align="left" class="TKLabel">
-        <pre><code>calories_per_cookie
-</code></pre>
-      </td>
-      <td align="center" style="[object Object]">=</td>
-      <td align="left"><span data-var="calories_per_cookie" data-type="definition" data-min="10" data-max="100" data-step="5" data-format="%d calories" class="TKAdjustableNumber"></span></td>
-    </tr>
-  </thead>
-  <thead>
-    <tr>
-      <td align="left" class="TKLabel">
-        <pre><code>calories
-</code></pre>
-      </td>
-      <td align="center" style="[object Object]">=</td>
-      <td align="left">
-        <pre><code>calories_per_cookie*cookies
-</code></pre>
-      </td>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="left"></td>
-      <td align="center" style="[object Object]"></td>
-      <td align="left"><span data-var="calories" data-type="definition" data-formula="calories_per_cookie*cookies" id="0d60f880-ef75-444e-26a1-952a7a127b96" data-format="%d calories" class="TKOutput"></span></td>
-    </tr>
-  </tbody>
-  <thead>
-    <tr>
-      <td align="left" class="TKLabel">
-        <pre><code>calories_per_day
-</code></pre>
-      </td>
-      <td align="center" style="[object Object]">=</td>
-      <td align="left"><span data-var="calories_per_day" data-type="definition" data-min="0" data-max="10000" data-step="100" data-format="%d calories" class="TKAdjustableNumber"></span></td>
-    </tr>
-  </thead>
-  <thead>
-    <tr>
-      <td align="left" class="TKLabel">
-        <pre><code>daily_percent
-</code></pre>
-      </td>
-      <td align="center" style="[object Object]">=</td>
-      <td align="left">
-        <pre><code>calories/calories_per_day
-</code></pre>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="left"></td>
-      <td align="center" style="[object Object]"></td>
-      <td align="left"><span data-var="daily_percent" data-type="definition" data-formula="calories/calories_per_day" id="48d7dfdb-af8a-be63-00f9-4bfec3ae232e" data-format="percent" class="TKOutput"></span></td>
+      <td><span data-var="cookies" data-type="reference" data-default="-1" data-format="cookies" class="TKAdjustableNumber"></span></td>
+      <td>=<span data-var="cookies" data-type="reference" data-default="5" data-format="%d" class="TKAdjustableNumber"></span></td>
     </tr>
   </tbody>
 </table>
-</blockquote>
+<p><span data-var="cookies" data-type="reference" data-default="3" data-format="%d cookies" class="TKAdjustableNumber"></span><span data-var="calories_per_cookie" data-type="definition" data-min="10" data-max="100" data-step="5" class="TKAdjustableNumber" data-default="50" data-format="%d calories"></span><span data-var="calories" data-type="definition" data-formula="calories_per_cookie*cookies" class="TKOutput" id="1e8ddb0a-bfe0-1b26-dc0e-e95d4cb79c79" data-default="150" data-format="%d calories"></span><span data-var="calories_per_day" data-type="definition" data-min="0" data-max="10000" data-step="100" class="TKAdjustableNumber" data-default="2000" data-format="%d calories"></span><span data-var="daily_percent" data-type="definition" data-formula="calories/calories_per_day" class="TKOutput" id="76bf4244-63af-76d2-e265-c027a9f10cee" data-default="-1" data-format="percent"></span></p>
 <pre><script type="text/javascript" src="https://pagecdn.io/lib/mathjs/9.4.4/math.min.js"></script></pre>
 <pre><script type="text/javascript" src="http://worrydream.com/Tangle/Tangle.js"></script></pre>
 <pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/TangleKit.js"></script></pre>
@@ -87,58 +25,58 @@
 <pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/BVTouchable.js"></script></pre>
 <pre><link href="http://worrydream.com/Tangle/TangleKit/TangleKit.css" type="text/css" rel="stylesheet"></pre>
 <pre><style>
-        .TKOutput { color: #4eabff; border-bottom: 1px dashed #4eabff;}
-        .TKOutput:hover { background-color: #e3eef3;}
-        .TKOutput:active { background-color: #4eabff; color: #fff; }
-        a.TKOutput { text-decoration: none; }
 
-        .TKAdjustableNumberHelp { color: #0dbe04!important }
-        .TKAdjustableNumber { color: #0dbe04; border-bottom: 1px dashed #0dbe04 }
-        .TKAdjustableNumber:hover { background-color: #e4ffed }
-        .TKAdjustableNumber:active { background-color: #66c563; color: #fff; }
+.TKOutput { color: #4eabff; border-bottom: 1px dashed #4eabff;}
+.TKOutput:hover { background-color: #e3eef3;}
+.TKOutput:active { background-color: #4eabff; color: #fff; }
+a.TKOutput { text-decoration: none; }
 
-        .TKLabel pre {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
-        .TKLabel {
-          color: #fff;
-          display: inline-block;
-          text-align: center;
-          line-height: 1.0;
-          padding-left: 8px;
-          padding-right: 8px;
-          padding-top: 2px;
-          padding-bottom: 3px;
-          border-radius: 20px;
-          border-radius: 20px
-          border: 1px solid #85abbd;
-          background-color: #91b9cc;
-          width: "100%";
-        }
-        .TKLabel:hover {
-          background-color: #5f9bb6;
-          border-color: #6a828e;
-        }
+.TKAdjustableNumberHelp { color: #0dbe04!important }
+.TKAdjustableNumber { color: #0dbe04; border-bottom: 1px dashed #0dbe04 }
+.TKAdjustableNumber:hover { background-color: #e4ffed }
+.TKAdjustableNumber:active { background-color: #66c563; color: #fff; }
+
+.TKLabel pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.TKLabel { 
+  color: #fff; 
+  display: inline-block;
+  text-align: center;
+  line-height: 1.0;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  border-radius: 20px;
+  border-radius: 20px
+  border: 1px solid #85abbd;
+  background-color: #91b9cc;
+  width: "100%";
+}
+.TKLabel:hover {
+  background-color: #5f9bb6;
+  border-color: #6a828e;
+}
+
 
 </style></pre>
-<pre><script class="language-javascript">
-      // setUpTangle();
-
-      var tangle = new Tangle (document.body, {
-        initialize: function () {
-          this.cookies = 3;
-          this.calories_per_cookie = 50;
-          this.calories = 150;
-          this.calories_per_day = 2000;
-          this.daily_percent = -1;
-        },
-        update: function () {
-          var scope = {cookies: this.cookies, calories: this.calories, daily_percent: this.daily_percent, calories_per_cookie: this.calories_per_cookie, calories_per_day: this.calories_per_day}
-
-          this.calories = math.evaluate("calories_per_cookie*cookies", scope);
-          this.daily_percent = math.evaluate("calories/calories_per_day", scope);
-       }
-      });
+<pre><script type="text/javascript">   
+var tangle = new Tangle (document.body, {
+  initialize: function () {
+    this.cookies = 3;
+    this.calories_per_cookie = 50;
+    this.calories = 150;
+    this.calories_per_day = 2000;
+    this.daily_percent = -1; 
+  },
+  update: function () {
+    var scope = {cookies: this.cookies, calories_per_cookie: this.calories_per_cookie, calories: this.calories, calories_per_day: this.calories_per_day, daily_percent: this.daily_percent}   
+    this.calories = math.evaluate("calories_per_cookie*cookies", scope);
+    this.daily_percent = math.evaluate("calories/calories_per_day", scope);
+  }  
+});
 
 </script></pre>
+

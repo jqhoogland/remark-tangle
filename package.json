@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jqhoogland/remark-tangle#readme",
   "dependencies": {
+    "@types/mdast": "^3.0.10",
     "fs": "^0.0.1-security",
     "hastscript": "^7.0.2",
     "mathjs": "^9.5.1",
@@ -29,6 +30,7 @@
     "rehype-stringify": "^9.0.2",
     "remark": "^14.0.1",
     "remark-directive": "^2.0.0",
+    "remark-gfm": "^3.0.0",
     "remark-parse": "^10.0.0",
     "remark-rehype": "^10.0.0",
     "typescript": "^4.4.4",
