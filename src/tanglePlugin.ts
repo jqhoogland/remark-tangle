@@ -119,7 +119,9 @@ function parseDisplayString(
       // TODO: Add an option for `%'d` and `$'f` (to display `1000` as `1,000`)
       const fstring = `%${includeCommas ? "" : ""}${precision !== undefined ? `.${precision}f` : "d" }`
 
-      return [defaultValue, displayString.replace(defaultValueString,fstring )]
+      const includesPercent = displayString.includes("%");
+
+      return [defaultValue, includesPercent ? "percent" : displayString.replace(defaultValueString,fstring )];
     } else {
       // TODO: Add support for string-valued variables
       // NOTE: use TKSwitch

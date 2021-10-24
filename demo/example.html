@@ -1,9 +1,10 @@
 
-<p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" class="TKAdjustableNumber" data-default="3" data-format="%d cookies"></span>, you consume <strong><a data-var="calories" data-type="reference" data-default="150" data-format="%d calories" class="TKOutput" href="#43773847-f731-6e35-318b-a5d35ed4c8ef"></a></strong>. That's <a data-var="daily_percent" data-type="reference" style="margin-right: 0.5ch" data-default="-1" data-format="percent" class="TKOutput" href="#ccdc5b7a-75b6-4d1c-85cc-d6a83b1379b1"></a>of your recommended daily calories.</p>
+<h3>How many cookies?</h3>
+<p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" class="TKAdjustableNumber" data-default="3" data-format="%d cookies"></span>, you consume <strong><a data-var="calories" data-type="reference" data-default="150" data-format="%d calories" class="TKOutput" href="#323f690d-008d-65eb-b6d1-b9d2bc10e472"></a></strong>. That's <a data-var="daily_percent" data-type="reference" style="margin-right: 0.5ch" data-default="7" data-format="percent" class="TKOutput" href="#d5358534-7caf-b780-e119-136ba9f13aba"></a>of your recommended daily calories.</p>
 <table>
   <thead>
     <tr>
-      <th></th>
+      <th>Calculation for daily %</th>
       <th></th>
     </tr>
   </thead>
@@ -18,7 +19,7 @@
     </tr>
     <tr>
       <td><span data-var="calories" data-type="reference" class="TKLabel" data-format=""><code>calories</code></span></td>
-      <td>= <span data-var="calories_per_cookie" data-type="reference" class="TKLabel" data-format=""><code>calories_per_cookie</code></span>*<span data-var="cookies" data-type="reference" class="TKLabel" data-format=""><code>cookies</code></span> =<span data-var="calories" data-type="definition" style="margin-left: 1ch" data-formula="calories_per_cookie*cookies" class="TKOutput" id="43773847-f731-6e35-318b-a5d35ed4c8ef" data-default="150" data-format="%d calories"></span></td>
+      <td>= <span data-var="calories_per_cookie" data-type="reference" class="TKLabel" data-format=""><code>calories_per_cookie</code></span>*<span data-var="cookies" data-type="reference" class="TKLabel" data-format=""><code>cookies</code></span> =<span data-var="calories" data-type="definition" style="margin-left: 1ch" data-formula="calories_per_cookie*cookies" class="TKOutput" id="323f690d-008d-65eb-b6d1-b9d2bc10e472" data-default="150" data-format="%d calories"></span></td>
     </tr>
     <tr>
       <td><span data-var="calories_per_day" data-type="reference" class="TKLabel" data-format=""><code>calories_per_day</code></span></td>
@@ -26,7 +27,7 @@
     </tr>
     <tr>
       <td><span data-var="daily_percent" data-type="reference" class="TKLabel" data-format=""><code>daily_percent</code></span></td>
-      <td>= <span data-var="calories" data-type="reference" class="TKLabel" data-format=""><code>calories</code></span>/<span data-var="calories_per_day" data-type="reference" class="TKLabel" data-format=""><code>calories_per_day</code></span> =<span data-var="daily_percent" data-type="definition" style="margin-left: 1ch" data-formula="calories/calories_per_day" class="TKOutput" id="ccdc5b7a-75b6-4d1c-85cc-d6a83b1379b1" data-default="-1" data-format="percent"></span></td>
+      <td>= <span data-var="calories" data-type="reference" class="TKLabel" data-format=""><code>calories</code></span>/<span data-var="calories_per_day" data-type="reference" class="TKLabel" data-format=""><code>calories_per_day</code></span> =<span data-var="daily_percent" data-type="definition" style="margin-left: 1ch" data-formula="calories/calories_per_day" class="TKOutput" id="d5358534-7caf-b780-e119-136ba9f13aba" data-default="-1" data-format="percent"></span></td>
     </tr>
   </tbody>
 </table>

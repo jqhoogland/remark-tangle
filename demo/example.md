@@ -1,7 +1,9 @@
-When you eat [3 cookies](cookies=[0..100]), you consume **[150 calories](calories)**. That's [percent](daily_percent&margin-right=0.5ch) of your recommended daily calories.
+### How many cookies?
+
+When you eat [3 cookies](cookies=[0..100]), you consume **[150 calories](calories)**. That's [7.5%](daily_percent&margin-right=0.5ch) of your recommended daily calories.
 
 
-| |  |
+| Calculation for daily % |  |
 | --- | --- |
 | [`cookies`](cookies) | = [5 cookies](cookies&margin-left=1ch) |
 | [`calories_per_cookie`](calories_per_cookie) | = [50 calories](calories_per_cookie=[10..100;5]&margin-left=1ch) | 
