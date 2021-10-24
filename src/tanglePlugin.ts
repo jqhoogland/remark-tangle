@@ -1,4 +1,3 @@
-import {visit} from 'unist-util-visit';
 import {h} from 'hastscript';
 import {Link, Root} from "mdast";
 import {MdastNode} from "mdast-util-to-hast/lib";
@@ -250,6 +249,8 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
   const variableClasses: Record<string, string> = {}; // Keep track of classes for TangleKit.
 
   return (tree: Root) => {
+    // To deal with this problem: https://github.com/vercel/next.js/issues/9607#issuecomment-901525030
+    const { visit } = await import('unist-util-visit');
 
     visit(tree, (node: MdastNode) => {
 
