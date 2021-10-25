@@ -67,11 +67,13 @@ a.TKOutput { text-decoration: none; }
 export const createTangleSetUp = (names: string[], defaultValues: Record<string, string|number>, outputFormulas: Record<string, string>) => `   
 var tangle = new Tangle (document.body, {
   initialize: function () {
-${Object.keys(defaultValues).map(key => (`    this.${key} = ${defaultValues[key]};`)).join("\n")} 
+${names.map(name => (`    this.${name} = ${defaultValues?.[name] ?? null};`)).join("\n")} 
   },
   update: function () {
-    var scope = {${names.map((name: string) => `${name}: this.${name}`).join(", ")}}   
-${Object.keys(outputFormulas).map(key => (`    this.${key} = math.evaluate("${outputFormulas[key]}", scope);`)).join("\n")}
+    var scope = {${names.map((name: string) => `${name}: this.${name}`).join(", ")}}  
+     
+     
+${Object.keys(outputFormulas).map(key => (`    this.${key} = math.evaluate("${outputFormulas?.[key] ?? null}", scope);`)).join("\n")}
   }  
 });
 `

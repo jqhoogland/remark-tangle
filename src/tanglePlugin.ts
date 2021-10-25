@@ -1,4 +1,5 @@
-import {h} from 'hastscript';
+import visit from 'unist-util-visit'; // TODO: Update these to new versions once next.js allows imports in next.config.js
+import h from 'hastscript';
 import {Link, Root} from "mdast";
 import {MdastNode} from "mdast-util-to-hast/lib";
 
@@ -6,6 +7,7 @@ import {addExternalScripts, addScript,  addStyleSheets, addStyleTag} from "./uti
 import {createTangleSetUp, TANGLE_SCRIPTS, TANGLE_STYLESHEETS, TANGLE_STYLING} from "./utils/tangle";
 import {getGuid} from "./utils/misc";
 import {TanglePluginOptions, FieldAttributes, TangleField, TangleFieldShorthand} from "./index.d"
+import math from "mathjs";
 
 const defaultTanglePluginOptions: TanglePluginOptions = {
   start: "t",
@@ -101,37 +103,41 @@ function parseDisplayString(
     attributes: FieldAttributes
 ):[(null | string | number), string] {
   if (!displayString) return [null, "%s"];
-
+  else if (
+      !!["percent", "p2", "p3", "e6", "abs_e6", "freq", "dollars", "free"].find(str => str === displayString)
+      || displayString.match(/(%('?)(.\d+)?[sdf])/)?.[0]
+  ) return [null, displayString];
   // If the display format includes an explicit fstring (e.g., `%.0f`, `%'d`, `%s`), return as is
-  if (displayString.match(/(%('?)(.\d+)?[sdf])/)?.[0] === undefined) {
-    // See if the display format includes a number (e.g., `100`, `1000.0`, `1,000.0`)
-    const defaultValueString = displayString.match(/(((\d)*(,\d\d\d)*(\.)(\d+))|((\d)+(,\d\d\d)*(\.?)(\d*)))/)?.[0];
-    // TODO: Add support for non-American numbers (1.000,00)
 
-    if (defaultValueString !== undefined) {
-      const defaultValue = parseInt(defaultValueString.replace(",", ""));
+  // See if the display format includes a number (e.g., `100`, `1000.0`, `1,000.0`)
+  const defaultValueString = displayString
+      .match(/(((\d)*(,\d\d\d)*(\.)(\d+))|((\d)+(,\d\d\d)*(\.?)(\d*)))/)?.[0]
+      .replace("-", "");
+  // TODO: Add support for non-American numbers (1.000,00)
 
-      const includeCommas = defaultValueString.includes(",");
-      const precisionString = defaultValueString.match(/\.(\d*)/)?.[0];
-      const precision = precisionString && precisionString.length-1
+  if (defaultValueString !== undefined) {
+    const defaultValue = parseInt(defaultValueString.replace(",", ""));
 
-      // TODO: Add an option for `%'d` and `$'f` (to display `1000` as `1,000`)
-      const fstring = `%${includeCommas ? "" : ""}${precision !== undefined ? `.${precision}f` : "d" }`
+    const includeCommas = defaultValueString.includes(",");
+    const precisionString = defaultValueString.match(/\.(\d*)/)?.[0];
+    const precision = precisionString && precisionString.length-1
 
-      const includesPercent = displayString.includes("%");
+    // TODO: Add an option for `%'d` and `$'f` (to display `1000` as `1,000`)
+    const fstring = `%${includeCommas ? "" : ""}${precision !== undefined ? `.${precision}f` : "d" }`
 
-      return [defaultValue, includesPercent ? "percent" : displayString.replace(defaultValueString,fstring )];
-    } else {
-      // TODO: Add support for string-valued variables
-      // NOTE: use TKSwitch
-      const choices = attributes?.["data-choices"] ?? []
+    const includesPercent = displayString.includes("%");
 
-      const defaultValue = choices?.findIndex(choice => displayString.includes(choice));
-      return [
-        defaultValue,
-        displayString.replace(choices[defaultValue], "%s"),
-      ];
-    }
+    return [defaultValue * (includesPercent ? 0.01 : 1), !includesPercent ? displayString.replace(defaultValueString, fstring) : "percent" ];
+  } else {
+    // TODO: Add support for string-valued variables
+    // NOTE: use TKSwitch
+    const choices = attributes?.["data-choices"] ?? []
+
+    const defaultValue = choices?.findIndex(choice => displayString.includes(choice));
+    return [
+      defaultValue,
+      displayString.replace(choices[defaultValue], "%s"),
+    ];
   }
 
   return [null, displayString];
@@ -149,7 +155,7 @@ const processFieldDirective = (node: TangleField) => {
 
   const [name, ...styleKeys] = Object.keys(node.attributes);
 
-  const formula = node.attributes[name] ?? "";
+  let formula = node.attributes[name] ?? "";
   const fieldType = (formula === "") ? "reference" : "definition";
 
   const attributes: FieldAttributes = {
@@ -188,14 +194,14 @@ const processFieldDirective = (node: TangleField) => {
   if (fieldType === "definition") {
 
     // Extract any parameters specific to this type of field.
-    const rangeMatch = formula.match(/\[((?:\w?\d?)*)\.{2,3}((?:\w?\d?)*);?((?:\w?\d?)*)\]/)
+    const rangeMatch = formula.match(/\[((?:\w?\d?)*)\.{2,3}((?:\w?\d?)*);?((?:\w?\.?\d?)*)\]/)
     const selectMatch = formula.match(/\[((?:(\d?\w?)+,?\s*)+)\]/);
 
     if (rangeMatch !== null) { // ----------------- RANGE INPUT FIELD
       const [_, min, max, step] = rangeMatch
-      attributes["data-min"] = parseInt(min);
-      attributes["data-max"] = parseInt(max);
-      attributes["data-step"] = parseInt(step);
+      attributes["data-min"] = math.evaluate(min);
+      attributes["data-max"] = math.evaluate(max);
+      attributes["data-step"] = math.evaluate(step);
       attributes["class"] = "TKAdjustableNumber";
 
 
@@ -205,7 +211,7 @@ const processFieldDirective = (node: TangleField) => {
       attributes["class"] = "TKSwitch";
 
     } else { // ---------------------------------------- OUTPUT FIELD
-      attributes["data-formula"] = formula;
+      attributes["data-formula"] = decodeURI(formula);
       attributes["class"] = "TKOutput"; // NOTE: This is not included in TangleKit; it is my own extension.
 
       const id = getGuid()
@@ -248,9 +254,10 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
   const outputIds: Record<string, string> = {}; // Keep track of ids to link output references to their definitions.
   const variableClasses: Record<string, string> = {}; // Keep track of classes for TangleKit.
 
+
   return (tree: Root) => {
-    // To deal with this problem: https://github.com/vercel/next.js/issues/9607#issuecomment-901525030
-    const { visit } = await import('unist-util-visit');
+    // MDX compatibility
+    const isMdx = !!tree.children.find(child => ["jsx", "import", "export"].includes(child.type));
 
     visit(tree, (node: MdastNode) => {
 
@@ -261,7 +268,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
 
       // FIRST PASS
       // Process textDirective (if the directive starts with the correct `options.start` name, by default `"t"`)
-      if (node.type === "textDirective" && node.name === options.start) {
+      if (node.type === "textDirective" && node?.name === options.start) {
         processFieldDirective(node);
 
         const properties = node.data.hProperties;
@@ -269,7 +276,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
         // Add to global tracking so that we can initialize reference fields correctly on the second pass
         if (properties.dataType === "definition") {
 
-          const name = properties.dataVar;
+          const name = properties?.dataVar;
           names.add(name);
 
           if (properties?.className)
@@ -281,7 +288,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
           if (properties?.id)
             outputIds[name] = properties.id;
 
-          if (!defaultValues[name]) {
+          if (!defaultValues?.[name]) {
             defaultValues[name] = properties.dataDefault;
           }
 
@@ -292,7 +299,7 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
     // SECOND PASS
     // After having visited all the nodes, visit them again to add the appropriate classes & links
     visit(tree, (node: MdastNode) => {
-      if ( node.type === 'textDirective' && node.name === options.start ) {
+      if ( node.type === 'textDirective' && node?.name === options.start ) {
 
         if (!node.data.hProperties.className?.includes("TKLabel")) {
           node.data.hProperties.className = variableClasses[node.data.hProperties.dataVar];
@@ -306,14 +313,26 @@ export default function tanglePlugin(this: any, options: Partial<TanglePluginOpt
       }
     })
 
-    // ADD TANGLE SET-UP & DEPENDENCIES
-    // TODO: Get rid of all of these external dependencies.
-    addExternalScripts(tree, TANGLE_SCRIPTS);
-    addStyleSheets(tree, TANGLE_STYLESHEETS);
-    addStyleTag(tree, TANGLE_STYLING);
-    // NOTE: This opens you up to XSS attacks. Tread carefully!
-    const tangleSetUp = createTangleSetUp(Array.from(names), defaultValues, outputFormulas);
-    addScript(tree, {value: tangleSetUp})
+    const _names = Array.from(names);
+    console.log("Found variables: ", _names);
+    console.log("Default values:", defaultValues);
+    console.log("Output formulas:", outputFormulas);
 
+    if (_names.length > 0) {
+      // ADD TANGLE SET-UP & DEPENDENCIES
+
+      // TODO: Get rid of all of these external dependencies.
+      addExternalScripts(tree, TANGLE_SCRIPTS);
+      addStyleSheets(tree, TANGLE_STYLESHEETS);
+      addStyleTag(tree, TANGLE_STYLING);
+      // NOTE: This opens you up to XSS attacks. Tread carefully!
+
+      const tangleSetUp = createTangleSetUp(_names, defaultValues, outputFormulas);
+      console.log("Tangle Start up script:", tangleSetUp)
+      addScript(tree, {value: tangleSetUp})
+
+      console.log("Tree:", tree)
+
+    }
   }
 }

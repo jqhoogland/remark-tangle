@@ -38,7 +38,7 @@ export interface FieldAttributes {
   "data-default"?: (string | number | null);
 
   "style"?: Record<string, string|number>;
-  "class"?: "TKAdjustableNumber" | "TKSwitch" | "TKOutput" | "TKLabel"; // This can't be locally determined for a reference-field
+  "class-name"?: "TKAdjustableNumber" | "TKSwitch" | "TKOutput" | "TKLabel"; // This can't be locally determined for a reference-field
 
   // Range inputs
   "data-min"?: number;

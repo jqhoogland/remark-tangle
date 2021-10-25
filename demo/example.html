@@ -1,104 +1,364 @@
 
-<h3>How many cookies?</h3>
-<p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" class="TKAdjustableNumber" data-default="3" data-format="%d cookies"></span>, you consume <strong><a data-var="calories" data-type="reference" data-default="150" data-format="%d calories" class="TKOutput" href="#323f690d-008d-65eb-b6d1-b9d2bc10e472"></a></strong>. That's <a data-var="daily_percent" data-type="reference" style="margin-right: 0.5ch" data-default="7" data-format="percent" class="TKOutput" href="#d5358534-7caf-b780-e119-136ba9f13aba"></a>of your recommended daily calories.</p>
-<table>
-  <thead>
-    <tr>
-      <th>Calculation for daily %</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><span data-var="cookies" data-type="reference" class="TKLabel" data-format=""><code>cookies</code></span></td>
-      <td>=<span data-var="cookies" data-type="reference" style="margin-left: 1ch" data-default="5" data-format="%d cookies" class="TKAdjustableNumber"></span></td>
-    </tr>
-    <tr>
-      <td><span data-var="calories_per_cookie" data-type="reference" class="TKLabel" data-format=""><code>calories_per_cookie</code></span></td>
-      <td>=<span data-var="calories_per_cookie" data-type="definition" style="margin-left: 1ch" data-min="10" data-max="100" data-step="5" class="TKAdjustableNumber" data-default="50" data-format="%d calories"></span></td>
-    </tr>
-    <tr>
-      <td><span data-var="calories" data-type="reference" class="TKLabel" data-format=""><code>calories</code></span></td>
-      <td>= <span data-var="calories_per_cookie" data-type="reference" class="TKLabel" data-format=""><code>calories_per_cookie</code></span>*<span data-var="cookies" data-type="reference" class="TKLabel" data-format=""><code>cookies</code></span> =<span data-var="calories" data-type="definition" style="margin-left: 1ch" data-formula="calories_per_cookie*cookies" class="TKOutput" id="323f690d-008d-65eb-b6d1-b9d2bc10e472" data-default="150" data-format="%d calories"></span></td>
-    </tr>
-    <tr>
-      <td><span data-var="calories_per_day" data-type="reference" class="TKLabel" data-format=""><code>calories_per_day</code></span></td>
-      <td>=<span data-var="calories_per_day" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="10000" data-step="100" class="TKAdjustableNumber" data-default="2000" data-format="%d calories"></span></td>
-    </tr>
-    <tr>
-      <td><span data-var="daily_percent" data-type="reference" class="TKLabel" data-format=""><code>daily_percent</code></span></td>
-      <td>= <span data-var="calories" data-type="reference" class="TKLabel" data-format=""><code>calories</code></span>/<span data-var="calories_per_day" data-type="reference" class="TKLabel" data-format=""><code>calories_per_day</code></span> =<span data-var="daily_percent" data-type="definition" style="margin-left: 1ch" data-formula="calories/calories_per_day" class="TKOutput" id="d5358534-7caf-b780-e119-136ba9f13aba" data-default="-1" data-format="percent"></span></td>
-    </tr>
-  </tbody>
-</table>
-<pre><script type="text/javascript" src="https://pagecdn.io/lib/mathjs/9.4.4/math.min.js"></script></pre>
-<pre><script type="text/javascript" src="http://worrydream.com/Tangle/Tangle.js"></script></pre>
-<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/TangleKit.js"></script></pre>
-<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/sprintf.js"></script></pre>
-<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/mootools.js"></script></pre>
-<pre><script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/BVTouchable.js"></script></pre>
-<pre><link href="http://worrydream.com/Tangle/TangleKit/TangleKit.css" type="text/css" rel="stylesheet"></pre>
-<pre><style>
+<h2>Interactive Writing: A plea for better communication</h2>
+<p>A few years ago, I first read the excellent essay by Bret Victor, "<a href="http://worrydream.com/ClimateChange/">What can a technologist do about climate change?</a>." For its treatment of climate change alone, I can't recommend the essay enough—there's food for thought to keep you satiated for a few months. But, then, near the end, Victor sneaks in a little section titled <a href="http://worrydream.com/ClimateChange/#media-debate">"Model-driven debate"</a> that has has kept me thinking <em>for years</em>.</p>
+<p>He begins with the example of Alan Blinder's "Cash for Clunkers" proposal. The federal government would offer car owners a rebate to exchange old, inefficient vehicles for newer ones. Proponents claimed it would cause massive emissions reductions. Meanwhile, critics claimed there were more cost-effective ways to reduce emissions. Who's right?</p>
+<p>Of course, it's both and neither—the answer depends entirely on the parameters of the program. As Victor writes:</p>
+<blockquote>
+  <p>"Many claims made during the debate offered no numbers to back them up. Claims with numbers rarely provided context to interpret those numbers. And <em>never</em> were readers shown the <em>calculations</em> behind any numbers. Readers had to make up their minds on the basis of hand-waving, rhetoric, bombast."</p>
+</blockquote>
+<p>Victor asks us to imagine a better world: what if the author had proposed a <em>model</em> rather than mere words? Then, we, the readers, could make up our own minds. Instead of bombast, we get an informed debate about the underlying assumptions and resulting tradeoffs.</p>
+<p>Let's look at an example (a slight modification of Victor's <a href="http://worrydream.com/ClimateChange/#media-debate">original example</a><sup><a href="#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref aria-describedby="footnote-label">1</a></sup>):</p>
+<blockquote>
+  <p>Say we allocate <span data-var="budget" data-type="definition" style="margin-right: 1ch" data-min="0" data-max="10" data-step="0.1" class="TKAdjustableNumber" data-default="3" data-format="$%.1f billion"></span>for the following program: Car-owners who trade in an old car that gets less than <span data-var="old_MPG_limit" data-type="definition" data-min="5" data-max="30" class="TKAdjustableNumber" data-default="17" data-format="%d MPG"></span>, and purchase a new car that gets better than <span data-var="new_MPG_limit" data-type="definition" data-min="5" data-max="50" class="TKAdjustableNumber" data-default="24" data-format="%d MPG"></span>, will receive a <span data-var="rebate" data-type="definition" style="margin-right: 1ch" data-min="0" data-max="20000" data-step="100" class="TKAdjustableNumber" data-default="3500" data-format="$%d"></span>rebate.</p>
+  <p>We estimate that this will get <a data-var="cars_traded" data-type="reference" style="margin-right: 0.5ch" data-default="828571" data-format="%d old cars" class="TKOutput" href="#5cb3e200-e17a-9a0b-a473-0ff4607fb861"></a>off the road. It will save <a data-var="gallons_saved" data-type="reference" style="margin-right: 0.5ch" data-default="1068" data-format="%d million gallons" class="TKOutput" href="#a411cce1-a1fe-d734-964e-1ed613e34a7f"></a>of gas (or <a data-var="hours_of_gas" data-type="reference" style="margin-right: 0.5ch" data-default="68" data-format="%d hours" class="TKOutput" href="#a5b3a300-b890-129b-faaa-4433c7b9965d"></a>worth of U.S. gas consumption.) It will avoid <a data-var="tons_CO2_saved" data-type="reference" style="margin-right: 1ch" data-default="9" data-format="%.2f million tons" class="TKOutput" href="#83215237-8cef-6fd4-a8bc-5b574dd3397e"></a>CO2e, or <a data-var="percent_annual_emissions" data-type="reference" data-default="0" data-format="%.2f" class="TKOutput" href="#ca67d545-d54a-4a6c-67a9-c2a1c25cc769"></a>% of annual U.S. greenhouse gas emissions.</p>
+  <p>The abatement cost is <a data-var="dollars_per_ton_CO2e" data-type="reference" style="margin-right: 0.5ch" data-default="301" data-format="$%d" class="TKOutput" href="#9e59a383-125a-eda8-8e50-bda971fa7f14"></a>per ton CO2e of federal spending, although it’s <a data-var="dollars_per_ton_CO2e_on_balance" data-type="reference" style="margin-right: 0.5ch" data-default="20" data-format="-$%d" class="TKOutput" href="#58983c3e-1e34-a6a4-5c44-58d0767eff68"></a>per ton CO2e on balance if you account for the money saved by consumers buying less gas.</p>
+</blockquote>
+<p>Try sliding clicking and dragging the items in green to update their values. You'll see the items in blue change as a result. To see how these outputs are computed, click on one of the blue items, and you'll see the calculation in the appendix to this article.</p>
+<p>
+  When I first saw this example, I had the kind of feeling that I imagine people in the '80s must have had when <a href="https://betafactory.com/what-came-first-wheeled-luggage-or-a-man-on-the-moon-20f8b22529a3">they first saw wheels on a suitcase</a>, that of dockworkers when <a href="https://www.freightos.com/the-history-of-the-shipping-container/">they first encountered shipping containers in the 60s</a>, or of late 15th century Europeans when they first read the results of movable type. A combination of "oh that's
+  so obvious!" with the shame of your civilization not having come up with the idea earlier and something akin to disgust at how we used to do things (or are still doing them).
+</p>
+<p>Victor's vision is what journalism and argumentative writing should look like. Next to this better system, hand-waving opinion pieces border on offensive.</p>
+<p>
+  Unfortunately, his vision has gotten almost no attention since its conception. Victor provided a small library, <a href="http://worrydream.com/Tangle/guide.html">Tangle</a>, to implement models like these, but not much has happened with it in the last half decade. That's understandable—the library requires prior experience with web development, which makes it unapproachable for most people, but it also offers no direct integration with any major JavaScript (JS) framework, which does not encourage actual web
+  developers to use it.
+</p>
+<p>
+  In its place, we've seen success with somewhat similar projects like <a href="https://observablehq.com/?utm_source=talk">Observable</a>. Observable helps you write JS notebooks that are highly interactive and relatively easy to embed in other websites. But the experience is not seamless: you still need familiarity with JS. Of course, we've had Jupyter notebooks and R Markdown for a while. Unfortunately all of these notebook-based models remain somewhat clunky and cumbersome. None of them
+  offer a really fluent and easy inline input option like Tangle.
+</p>
+<p>In this post, I'd like to look at a middleground—a (almost) no-code way to create interactive documents, which offers a much easier writing experience at the cost of sacrificing some of the customizability of Tangle or Observable/Python/R notebooks. Let's call it interactive Markdown.</p>
+<p>Now, I'm not the first. Shortly after Victor published Tangle, there was an explosion in Markdown related integrations: <a href="https://tal-baum.github.io/dynamic-Markdown/index.html">dynamic Markdown</a>, <a href="https://web.archive.org/web/20150219200704/http://activeMarkdown.org/">active Markdown</a> <a href="https://jotux.github.io/fangle/">fangle</a>, and <a href="https://bollwyvl.github.io/TangleDown/">TangleDown</a> are what I could find. I'm sure there are yet more.</p>
+<p>Still, I think there's a good reason to reinvent this wheel. For one, I'm not happy about the syntax of any of these options (though least unhappy with that of active/dynamic Markdown). The problem is that none of them are backwards compatible with existing Markdown interpreters. I'm of the strong opinion that since there are so many Markdown extensions already, if you come up with a new, it had better be backwards compatible.</p>
+<p>Second, all but fangle miss the ability to do inline calculations. Third, none is actively maintained. Fourth, all of them work by compiling <code>.md</code> to <code>.html</code>; I'd like an option to compile to <a href="https://mdxjs.com/"><code>.jsx</code> from <code>.mdx</code></a>, which I think would generally make this much easier to adopt for other people. Five, none offer an elegant way to display supplementary calculations the way Victor's example did.</p>
+<p>There's also a good "cultural" reason to reinvent this wheel. Thanks to note-taking tools like Notion, Roam, and Obsidian, Markdown is having a moment. More people are playing around with Markdown than ever before, so if ever there were a time to build on Markdown, it's now.</p>
+<p>Without further do, let me present interactive Markdown.</p>
+<hr>
+<h3>An example</h3>
+<p>Let's take a look at a very simple example (again <a href="http://worrydream.com/Tangle/guide.html">from Victor</a>):</p>
+<blockquote>
+  <p>When you eat <span data-var="cookies" data-type="definition" data-min="0" data-max="100" class="TKAdjustableNumber" data-default="3" data-format="%d cookies"></span>, you consume <strong><span data-var="calories" data-type="definition" data-formula="50*cookies" class="TKOutput" id="568b1635-c96a-0be8-28ee-4c693a0e8cb5" data-default="150" data-format="%d calories"></span></strong>. That's <a data-var="daily_percent" data-type="reference" style="margin-right: 1ch" data-default="0.07" data-format="percent" class="TKOutput" href="#f3822b7e-5e44-01be-d401-ef77ecc23d6f"></a>of your recommended daily calories.</p>
+</blockquote>
+<p>Under the hood, this looks as follows:</p>
+<pre><code>When you eat [3 cookies](cookies=[0..100]), 
+you consume **[150 calories](calories=50*cookies)**. 
+That's [7.5%](daily_percent) of your recommended daily calories.
+</code></pre>
+<p>Interactive Markdown is built around "<strong>fields</strong>". There are three in this example: <code>[3 cookies](cookies=[0..100])</code>, <code>[150 calories](calories=50*cookies)</code>, and <code>[7.5%](daily_percent)</code>.</p>
+<p>If you're familiar with Markdown, then you'll recognize a field as a link. Like a link, every field is made up of two parts (<code>[text representation](variable configuration)</code>): a text representation of the element between square brackets <code>[]</code>(the link text or alt text for a media element) and the variable configuration between round brackets <code>()</code>(the link <code>href</code> or image <code>src</code>).</p>
+<p>The reason for using the same syntax as a link is backwards compatibility. If there is no interactive Markdown interpreter, you only lose interactivity, not the reading experience.</p>
+<p>There are three kinds of fields: <strong>input</strong>, <strong>output</strong>, and <strong>reference</strong> fields.</p>
+<h4>Input fields</h4>
+<p><code>[3 cookies](cookies=[0..100])</code> is an <strong>input field</strong>. In the variable configuration, <code>(cookies=[0..100])</code>, we <em>define</em> a variable, <code>cookies</code>, that takes its value from a range of <code>0</code> to <code>100</code>. In the text representation, <code>[3 cookies]</code>, we give the default value, <code>3</code>. The surrounding text is used as a template (for example, to specify units).<sup><a href="#user-content-fn-2" id="user-content-fnref-2" data-footnote-ref aria-describedby="footnote-label">2</a></sup></p>
+<p>There are two kinds of input field, <strong>range</strong> and <strong>select</strong>:</p>
+<ul>
+  <li><strong>Range Input</strong> (<code>my_var=[min..max;step]</code>): By clicking on the range input and dragging left or right, the user can adjust its value between <code>min</code> and <code>max</code> in intervals of size <code>step</code>.</li>
+  <li><strong>Select Input</strong> (<code>my_var=[a,b,c]</code>): By clicking on the select input, the user cycles through the options <code>a</code>, <code>b</code>, <code>c</code>...</li>
+</ul>
+<h4>Output fields</h4>
+<p><code>[150 calories](calories=50*cookies)</code> is an <strong>output field</strong>. On the right, we define the variable <code>calories</code> as the product of <code>50</code> and our previously defined variable <code>cookies</code>.</p>
+<p>Since the definition contains neither a range <code>[min..max;step]</code> nor select <code>[a,b,c]</code> input, an output field is not directly adjustable via user input. It is dynamically computed from the other variables in a document's scope.</p>
+<p>Because of this, the value of <code>150</code> is really more like a fallback than a default. An interactive Markdown interpreter won't ever user this value. A standard Markdown interpreter will render it as <a href="#">150 calories</a> for the same experience just without the interactive part.</p>
+<h4>Reference fields</h4>
+<p>Lastly, <code>[7.5%](daily_percent)</code> is a <strong>reference field</strong>. Unlike definition fields (i.e., <strong>input</strong> and <strong>output</strong> fields) references do not contain an equal sign <code>=</code> in their variable configuration. They display a variable that has already (or will be) defined elsewhere in the page.</p>
+<p>For example, we might put the calculation for <code>daily_percent</code> in the appendix to avoid cluttering the body text for your reader:</p>
+<blockquote>
+  <h3>Calculation for <code>daily_percent</code></h3>
+  <ul>
+    <li>Daily recommended calories limit =<span data-var="daily_calories" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="5000" data-step="50" class="TKAdjustableNumber" data-default="2000" data-format="%d calories"></span></li>
+    <li>Percent cookie calories per day =<span data-var="daily_percent" data-type="definition" style="margin-left: 1ch" data-formula="calories/daily_calories" class="TKOutput" id="f3822b7e-5e44-01be-d401-ef77ecc23d6f" data-default="0.07" data-format="percent"></span></li>
+  </ul>
+</blockquote>
+<p>Behind the scenes, this is:</p>
+<pre><code>### Calculation for `daily_percent`
+- Daily recommended calories limit = [2,000 calories](daily_calories=[0..5000;50])
+- Percent cookie calories per day = [7.5%](daily_percent=calories/daily_calories) 
 
-.TKOutput { color: #4eabff; border-bottom: 1px dashed #4eabff;}
+</code></pre>
+<p>References are useful for separating long calculations from your story line. It also helps to remind readers what variable values are, so they don't have to scroll back and forth a hundred times.</p>
+<p>Each variable should only have one definition field but can have arbitrarily many reference fields.</p>
+<p>Note that reference fields act differently depending on whether they reference an input or output variable:</p>
+<ul>
+  <li><strong>Input references</strong> let you update the original variable. To the reader, input references are indistinguishable from input definitions.</li>
+  <li><strong>Output references</strong> link to the original output definition. So I recommend you define an output variable in the same place that you describe its calculation to readers.</li>
+</ul>
+<hr>
+<h2>Conclusion</h2>
+<p>For the time being, it will take some technical know-how to get interactive Markdown up and running for yourself. If you're interested, I've written a <a href="https://github.com/jqhoogland/remark-tangle">remark plugin</a> that you can drop into an existing remark/rehype pipeline.</p>
+<p>That's because interactive Markdown is still in its infancy. There are many features I'd like to get to that I haven't had the time for yet (e.g., automatic dimensions checking to make sure your calculations make sense, popover links to calculations, more math functions, support for distributions and other data types), not to mention tools to make working with interactive Markdown easier: an in-browser editor, a plugin for Obsidian support, etc.</p>
+<p>If you're interested in all of this, make sure to subscribe to my newsletter to stay updated. And if you have any ideas, I'd love to hear from you. Check out the repository and raise an issue (or, even better, send a pull request).</p>
+<hr>
+<h2>Appendix</h2>
+<h3>A more complicated example</h3>
+<p>Let's look at the more complicated example from the beginning.</p>
+<p>Here is the example again (thanks to reference fields, it's perfectly in sync with the first instance):</p>
+<blockquote>
+  <p>Say we allocate <span data-var="budget" data-type="definition" style="margin-right: 1ch" data-min="0" data-max="10" data-step="0.1" class="TKAdjustableNumber" data-default="3" data-format="$%.1f billion"></span>for the following program: Car-owners who trade in an old car that gets less than <span data-var="old_MPG_limit" data-type="definition" data-min="5" data-max="30" class="TKAdjustableNumber" data-default="17" data-format="%d MPG"></span>, and purchase a new car that gets better than <span data-var="new_MPG_limit" data-type="definition" data-min="5" data-max="50" class="TKAdjustableNumber" data-default="24" data-format="%d MPG"></span>, will receive a <span data-var="rebate" data-type="definition" style="margin-right: 1ch" data-min="0" data-max="20000" data-step="100" class="TKAdjustableNumber" data-default="3500" data-format="$%d"></span>rebate.</p>
+  <p>We estimate that this will get <a data-var="cars_traded" data-type="reference" style="margin-right: 1ch" data-default="828571" data-format="%d old cars" class="TKOutput" href="#5cb3e200-e17a-9a0b-a473-0ff4607fb861"></a>off the road. It will save <a data-var="gallons_saved" data-type="reference" style="margin-right: 1ch" data-default="1068" data-format="%d million gallons" class="TKOutput" href="#a411cce1-a1fe-d734-964e-1ed613e34a7f"></a>of gas (or <a data-var="hours_of_gas" data-type="reference" style="margin-right: 1ch" data-default="68" data-format="%d hours" class="TKOutput" href="#a5b3a300-b890-129b-faaa-4433c7b9965d"></a>worth of U.S. gas consumption.) It will avoid <a data-var="tons_CO2_saved" data-type="reference" style="margin-right: 1ch" data-default="9" data-format="%.2f million tons" class="TKOutput" href="#83215237-8cef-6fd4-a8bc-5b574dd3397e"></a>CO2e, or <span data-var="_percent_annual_emissions" data-type="reference" data-default="0" data-format="%.2f"></span>% of annual U.S. greenhouse gas emissions.</p>
+  <p>The abatement cost is <a data-var="dollars_per_ton_CO2e" data-type="reference" style="margin-right: 1ch" data-default="301" data-format="$%d" class="TKOutput" href="#9e59a383-125a-eda8-8e50-bda971fa7f14"></a>per ton CO2e of federal spending, although it’s <a data-var="dollars_per_ton_CO2e_on_balance" data-type="reference" style="margin-right: 1ch" data-default="20" data-format="-$%d" class="TKOutput" href="#58983c3e-1e34-a6a4-5c44-58d0767eff68"></a>per ton CO2e on balance if you account for the money saved by consumers buying less gas.</p>
+</blockquote>
+<p>And here's what it actually looks like (the first example):</p>
+<pre><code>Say we allocate [$3.0 billion](budget=[0..10;0.1]&#x26;margin-right=1ch) for the following program: 
+Car-owners who trade in an old car that gets less than [17 MPG](old_MPG_limit=[5..30]), 
+and purchase a new car that gets better than [24 MPG](new_MPG_limit=[5..50]), 
+will receive a [$3,500](rebate=[0..20000;100]&#x26;margin-right=1ch) rebate.
+
+We estimate that this will get [828,571 old cars](cars_traded&#x26;margin-right=1ch) off the road. 
+It will save [1,068 million gallons](gallons_saved&#x26;margin-right=1ch) of gas 
+(or [68 hours](hours_of_gas&#x26;margin-right=1ch&#x26;margin-right=1ch) worth of U.S. gas consumption). 
+It will avoid [9.97 million tons](tons_CO2_saved&#x26;margin-right=1ch) CO2e, 
+or [0.14](_percent_annual_emissions)% of annual U.S. greenhouse gas emissions.
+
+The abatement cost is [$301](dollars_per_ton_CO2e&#x26;margin-right=1ch) per ton CO2e of federal spending, 
+although it’s [-\$20](dollars_per_ton_CO2e_on_balance&#x26;margin-right=1ch) per ton CO2e on balance 
+if you account for the money saved by consumers buying less gas.
+
+</code></pre>
+<p>A few points to note:</p>
+<ul>
+  <li>The number in the text representation determines display precision. If you're familiar with <a href="https://www.cprogramming.com/tutorial/printf-format-strings.html">format strings</a>, <code>3.0</code> is converted to <code>%.1f</code>, <code>17</code> to <code>%d</code>, <code>3,500</code> to <code>%'d</code><sup><a href="#user-content-fn-3" id="user-content-fnref-3" data-footnote-ref aria-describedby="footnote-label">3</a></sup>, etc..
+    <ul>
+      <li>You can also use format strings directly in the text representation, e.g., <code>[%'d old cars](cars traded)</code>, but I don't recommend this because it won't be compatible with standard Markdown.</li>
+    </ul>
+  </li>
+  <li><code>[0..10;0.1]</code> specifies a range with a step-size equal to <code>0.1</code>. By default, the step size is <code>1</code>.</li>
+  <li>I haven't figured out spacing yet (hence <code>&#x26;margin-right=1ch</code>)</li>
+</ul>
+<h4>Cars Traded</h4>
+<ul>
+  <li><span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> =<span data-var="budget" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="10" data-step="0.1" class="TKAdjustableNumber" data-default="3" data-format="$%.1f billion"></span></li>
+  <li><span data-var="overhead" data-type="reference" class="TKLabel" data-format=""><code>overhead</code></span> =<span data-var="overhead" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="1000" data-step="10" class="TKAdjustableNumber" data-default="100" data-format="$%d million"></span></li>
+  <li><span data-var="rebate" data-type="reference" class="TKLabel" data-format=""><code>rebate</code></span> =<span data-var="rebate" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="20000" data-step="100" class="TKAdjustableNumber" data-default="3500" data-format="$%d"></span></li>
+  <li><span data-var="cars_traded" data-type="reference" class="TKLabel" data-format=""><code>cars_traded</code></span> = (<span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> - <span data-var="overhead" data-type="reference" class="TKLabel" data-format=""><code>overhead</code></span>) / <span data-var="rebate" data-type="reference" class="TKLabel" data-format=""><code>rebate</code></span> =<span data-var="cars_traded" data-type="definition" style="margin-left: 1ch" data-formula="(budget-overhead/1000)*1000000000/rebate" class="TKOutput" id="5cb3e200-e17a-9a0b-a473-0ff4607fb861" data-default="828571" data-format="%d"></span></li>
+</ul>
+<p>Here you see one more trick in interactive Markdown: A link containing an inline code element of the kind <code>[`variable_name`](variable_name)</code> is a reference <em>label</em>. It gets a <code>TKLabel</code> class for easier formatting, and, eventually, will synchronously darken whenever you highlight any references to or dependencies of its variable.</p>
+<hr>
+<h4>Gallons Saved</h4>
+<p>This is where my example diverges from <a href="http://worrydream.com/ClimateChange/#media-debate">Victor's example</a>. His calculation uses the distribution of mileage over current cars and cars being sold. I haven't yet added distributions to the interactive Markdown spec (though I plan to), so you'll have to accept a less precise version. Note that the comments come from Victor's original work.</p>
+<h5>Average mileage of old vehicles</h5>
+<blockquote>
+  <p>Assume that traded-in cars are chosen with equal probability from the pool of eligible cars. We use the harmonic average because we'll be calculating gallons consumed for constant miles, so we really want to be averaging gallons-per-mile.</p>
+</blockquote>
+<ul>
+  <li><span data-var="old_MPG_limit" data-type="reference" class="TKLabel" data-format=""><code>old_MPG_limit</code></span> =<span data-var="old_MPG_limit" data-type="definition" style="margin-left: 1ch" data-min="5" data-max="50" class="TKAdjustableNumber" data-default="17" data-format="%d MPG"></span></li>
+  <li><span data-var="average_current_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_current_MPG</code></span> =<span data-var="average_current_MPG" data-type="definition" style="margin-left: 1ch" data-min="5" data-max="50" class="TKAdjustableNumber" data-default="21" data-format="%d MPG"></span></li>
+  <li><span data-var="var_current_MPG" data-type="reference" class="TKLabel" data-format=""><code>var_current_MPG</code></span> =<span data-var="var_current_MPG" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="200" class="TKAdjustableNumber" data-default="25" data-format="%d MPG"></span></li>
+  <li><span data-var="average_old_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_old_MPG</code></span> = ∫ x N(x; <span data-var="average_current_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_current_MPG</code></span>, <span data-var="var_current_MPG" data-type="reference" class="TKLabel" data-format=""><code>var_current_MPG</code></span>) from <code>-Infinity</code> to <span data-var="old_MPG_limit" data-type="reference" class="TKLabel" data-format=""><code>old_MPG_limit</code></span> =<span data-var="average_old_MPG" data-type="definition" style="margin-left: 1ch" data-formula="old_MPG_limit*(average_current_MPG/20)" class="TKOutput" id="2132a65f-fe30-f728-71fb-677a74c8dad1" data-default="14" data-format="%d MPG"></span></li>
+</ul>
+<p>Alright so I haven't even actually added support for more complicated formulas like this. But it is coming.</p>
+<h5>Average mileage for vehicles currently being sold</h5>
+<blockquote>
+  <p>Assume that new cars are purchased with equal probability from the pool of eligible cars. The distribution really should be sales-weighted. I'm sure the data is available, but I couldn't find it.</p>
+</blockquote>
+<ul>
+  <li><span data-var="new_MPG_limit" data-type="reference" class="TKLabel" data-format=""><code>new_MPG_limit</code></span> =<span data-var="new_MPG_limit" data-type="definition" style="margin-left: 1ch" data-min="5" data-max="50" class="TKAdjustableNumber" data-default="15" data-format="%d MPG"></span></li>
+  <li><span data-var="average_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_new_MPG</code></span> =<a data-var="average_new_MPG" data-type="definition" style="margin-left: 1ch" data-min="5" data-max="50" class="TKOutput" data-default="24" data-format="%d MPG" href="#bc0ed685-d8f2-ec48-1f5d-c7819677fbeb"></a></li>
+  <li><span data-var="var_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>var_new_MPG</code></span> =<span data-var="var_new_MPG" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="20" class="TKAdjustableNumber" data-default="5" data-format="%d MPG"></span></li>
+  <li><span data-var="average_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_new_MPG</code></span> = ∫ x N(x; <span data-var="average_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_new_MPG</code></span>, <span data-var="var_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>var_new_MPG</code></span>) from <span data-var="new_MPG_limit" data-type="reference" class="TKLabel" data-format=""><code>new_MPG_limit</code></span> to <code>Infinity</code> =<span data-var="average_new_MPG" data-type="definition" style="margin-left: 1ch" data-formula="new_MPG_limit*(1+average_current_MPG/30)" class="TKOutput" id="bc0ed685-d8f2-ec48-1f5d-c7819677fbeb" data-default="30" data-format="%d MPG"></span></li>
+</ul>
+<h4>Average gallons saved per car replaced</h4>
+<blockquote>
+  <p>Assume that everyone who is buying a new car now would have eventually bought a similar car when their current car got too old. So the fuel savings from the program should be calculated over the remaining lifetime of the old car. Ideally we'd like the joint distribution of MPGs and age of the current fleet, but I can't find that data. So we'll just use averages.</p>
+</blockquote>
+<ul>
+  <li><span data-var="car_lifetime_miles" data-type="reference" class="TKLabel" data-format=""><code>car_lifetime_miles</code></span> =<span data-var="car_lifetime_miles" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="1000000" data-step="10000" class="TKAdjustableNumber" data-default="150000" data-format="%d miles"></span></li>
+  <li><span data-var="average_miles_left" data-type="reference" class="TKLabel" data-format=""><code>average_miles_left</code></span> = <span data-var="average_percent_miles_left" data-type="definition" data-min="0" data-max="1" data-step="0.01" class="TKAdjustableNumber" data-default="0.25" data-format="percent"></span>* <span data-var="car_lifetime_miles" data-type="reference" class="TKLabel" data-format=""><code>car_lifetime_miles</code></span> =<span data-var="average_miles_left" data-type="definition" style="margin-left: 1ch" data-formula="average_percent_miles_left*car_lifetime_miles" class="TKOutput" id="9ed585d5-6312-48ff-1baf-a338d3e90cb1" data-default="37" data-format="%.1f miles"></span></li>
+  <li><span data-var="gallons_used_by_old_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_used_by_old_car</code></span> = <span data-var="average_miles_left" data-type="reference" class="TKLabel" data-format=""><code>average_miles_left</code></span> / <span data-var="average_old_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_old_MPG</code></span> =<span data-var="gallons_used_by_old_car" data-type="definition" style="margin-left: 1ch" data-formula="average_miles_left/average_old_MPG" class="TKOutput" id="66af7468-b36d-cd4e-3b44-765618d1d3dc" data-default="2662" data-format="%d gallons"></span></li>
+  <li><span data-var="gallons_used_by_new_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_used_by_new_car</code></span> = <span data-var="average_miles_left" data-type="reference" class="TKLabel" data-format=""><code>average_miles_left</code></span> / <span data-var="average_new_MPG" data-type="reference" class="TKLabel" data-format=""><code>average_new_MPG</code></span> =<span data-var="gallons_used_by_new_car" data-type="definition" style="margin-left: 1ch" data-formula="average_miles_left/average_new_MPG" class="TKOutput" id="7f773062-366a-f942-e40f-432141df7166" data-default="1373" data-format="%d gallons"></span></li>
+  <li><span data-var="gallons_saved_per_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved_per_car</code></span> = <span data-var="gallons_used_by_old_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_used_by_old_car</code></span> - <span data-var="gallons_used_by_new_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_used_by_new_car</code></span> =<span data-var="gallons_saved_per_car" data-type="definition" style="margin-left: 1ch" data-formula="gallons_used_by_old_car-gallons_used_by_new_car" class="TKOutput" id="49e3b868-6ae1-476b-9935-00d06c035d6e" data-default="1289" data-format="%d gallons"></span></li>
+</ul>
+<h3>Total gallons saved</h3>
+<ul>
+  <li><span data-var="cars_traded" data-type="reference" class="TKLabel" data-format=""><code>cars_traded</code></span> =<a data-var="cars_traded" data-type="reference" style="margin-left: 1ch" data-default="828571" data-format="%d cars" class="TKOutput" href="#5cb3e200-e17a-9a0b-a473-0ff4607fb861"></a></li>
+  <li><span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> = <span data-var="gallons_saved_per_car" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved_per_car</code></span> * <span data-var="cars_traded" data-type="reference" class="TKLabel" data-format=""><code>cars_traded</code></span> =<span data-var="gallons_saved" data-type="definition" style="margin-left: 1ch" data-formula="gallons_saved_per_car*cars_traded/1000000" class="TKOutput" id="a411cce1-a1fe-d734-964e-1ed613e34a7f" data-default="1068" data-format="%d million gallons"></span></li>
+</ul>
+<blockquote>
+  <p>The importance of models may need to be underscored in this age of “big data” and “data mining”. Data, no matter how big, can only tell you what happened in the <em>past</em>. Unless you’re a historian, you actually care about the <em>future</em> — what <em>will</em> happen, what <em>could</em> happen, what <em>would</em> happen if you did this or that. Exploring these questions will always require models. Let’s get over “big data” — it’s time for “big modeling”.</p>
+</blockquote>
+<hr>
+<h4>Hours of Gas Saved</h4>
+<ul>
+  <li><span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> =<a data-var="gallons_saved" data-type="reference" style="margin-left: 1ch" data-default="1068" data-format="%d million gallons" class="TKOutput" href="#a411cce1-a1fe-d734-964e-1ed613e34a7f"></a></li>
+  <li><span data-var="gallons_consumed_per_day" data-type="reference" class="TKLabel" data-format=""><code>gallons_consumed_per_day</code></span> =<span data-var="gallons_consumed_per_day" data-type="definition" data-min="0" data-max="1000" data-step="1" class="TKAdjustableNumber" data-default="378" data-format="%d million gallons"></span></li>
+  <li><span data-var="gallons_consumed_per_hour" data-type="reference" class="TKLabel" data-format=""><code>gallons_consumed_per_hour</code></span> = <span data-var="gallons_consumed_per_day" data-type="reference" class="TKLabel" data-format=""><code>gallons_consumed_per_day</code></span> / 24 =<span data-var="gallons_consumed_per_hour" data-type="definition" style="margin-left: 1ch" data-formula="gallons_consumed_per_day/24" class="TKOutput" id="d142359b-ec5a-603d-fb14-4d06cba38e78" data-default="16" data-format="%d million gallons"></span></li>
+  <li><span data-var="hours_of_gas" data-type="reference" class="TKLabel" data-format=""><code>hours_of_gas</code></span> = <span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> / <span data-var="gallons_consumed_per_hour" data-type="reference" class="TKLabel" data-format=""><code>gallons_consumed_per_hour</code></span> =<span data-var="hours_of_gas" data-type="definition" style="margin-left: 1ch" data-formula="gallons_saved/gallons_consumed_per_hour" class="TKOutput" id="a5b3a300-b890-129b-faaa-4433c7b9965d" data-default="68" data-format="%d hours"></span></li>
+</ul>
+<hr>
+<h4>Tons of CO2 Saved</h4>
+<ul>
+  <li><span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> =<a data-var="gallons_saved" data-type="reference" style="margin-left: 1ch" data-default="1068" data-format="%d million gallons" class="TKOutput" href="#a411cce1-a1fe-d734-964e-1ed613e34a7f"></a></li>
+  <li><span data-var="kg_CO2_per_gallon_gas" data-type="reference" class="TKLabel" data-format=""><code>kg_CO2_per_gallon_gas</code></span> =<span data-var="kg_CO2_per_gallon_gas" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="50" data-step="0.01" class="TKAdjustableNumber" data-default="8" data-format="%.2f kg/gallon"></span></li>
+  <li><span data-var="tons_CO2_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2_saved</code></span> = <span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> * <span data-var="kg_CO2_per_gallon_gas" data-type="reference" class="TKLabel" data-format=""><code>kg_CO2_per_gallon_gas</code></span> / 1000 =<span data-var="tons_CO2_saved" data-type="definition" style="margin-left: 1ch" data-formula="gallons_saved*kg_CO2_per_gallon_gas/1000" class="TKOutput" id="83215237-8cef-6fd4-a8bc-5b574dd3397e" data-default="9" data-format="%.2f million tons"></span></li>
+</ul>
+<blockquote>
+  <p>CO2 comprises 95% of a car's greenhouse gas <span data-var="" data-type="reference" data-default="-1" data-format="effective"></span>emissions. The other 5% include methane, nitrous oxide, and hydroflourocarbons. To account for these other gases, we divide the amount of CO2 by 0.95 to get CO2e (“carbon dioxide equivalent”).<sup><a href="#user-content-fn-1" id="user-content-fnref-1-2" data-footnote-ref aria-describedby="footnote-label">1</a></sup></p>
+</blockquote>
+<ul>
+  <li><span data-var="CO2_per_CO2e" data-type="reference" class="TKLabel" data-format=""><code>CO2_per_CO2e</code></span> =<span data-var="CO2_per_CO2e" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="1" data-step="0.01" class="TKAdjustableNumber" data-default="0.9500000000000001" data-format="percent"></span></li>
+  <li><span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> = <span data-var="tons_CO2_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2_saved</code></span> / <span data-var="CO2_per_CO2e" data-type="reference" class="TKLabel" data-format=""><code>CO2_per_CO2e</code></span> =<span data-var="tons_CO2e_saved" data-type="definition" style="margin-left: 1ch" data-formula="tons_CO2_saved/CO2_per_CO2e" class="TKOutput" id="9e7a2da1-f7fa-d765-e2ca-f05650ed9855" data-default="9" data-format="%.1f million tons"></span></li>
+</ul>
+<hr>
+<h4>Percent Annual Emissions</h4>
+<ul>
+  <li><span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> =<a data-var="tons_CO2e_saved" data-type="reference" style="margin-left: 1ch" data-default="9" data-format="%.2f million tons" class="TKOutput" href="#9e7a2da1-f7fa-d765-e2ca-f05650ed9855"></a></li>
+  <li><span data-var="tons_CO2e_emitted_yearly" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_emitted_yearly</code></span> =<span data-var="tons_CO2e_emitted_yearly" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="100000" data-step="1000" class="TKAdjustableNumber" data-default="6983" data-format="%d million tons"></span></li>
+  <li><span data-var="percent_annual_emissions" data-type="reference" class="TKLabel" data-format=""><code>percent_annual_emissions</code></span> = <span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> / <span data-var="tons_CO2e_emitted_yearly" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_emitted_yearly</code></span> * 100 = <span data-var="percent_annual_emissions" data-type="definition" style="margin-left: 1ch" data-formula="tons_CO2e_saved/tons_CO2e_emitted_yearly*100" class="TKOutput" id="ca67d545-d54a-4a6c-67a9-c2a1c25cc769" data-default="0" data-format="%.2f"></span>%</li>
+</ul>
+<p>That last one should read something like <code>0.14%</code> for default options but not all formatting options are available yet.</p>
+<hr>
+<h4>Dollars per ton CO2e</h4>
+<ul>
+  <li><span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> =<span data-var="budget" data-type="reference" style="margin-left: 1ch" data-default="3" data-format="$%.1f billion" class="TKAdjustableNumber"></span></li>
+  <li><span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> =<a data-var="tons_CO2e_saved" data-type="reference" style="margin-left: 1ch" data-default="9" data-format="%.2f million tons" class="TKOutput" href="#9e7a2da1-f7fa-d765-e2ca-f05650ed9855"></a></li>
+  <li><span data-var="dollars_per_ton_CO2e" data-type="reference" class="TKLabel" data-format=""><code>dollars_per_ton_CO2e</code></span> = <span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> / <span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> =<span data-var="dollars_per_ton_CO2e" data-type="definition" style="margin-left: 1ch" data-formula="budget*1000/tons_CO2e_saved" class="TKOutput" id="9e59a383-125a-eda8-8e50-bda971fa7f14" data-default="301" data-format="$%.0f"></span></li>
+</ul>
+<hr>
+<h4>Dollars per ton CO2e on balance</h4>
+<ul>
+  <li>
+    <p><span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> =<a data-var="gallons_saved" data-type="reference" style="margin-left: 1ch" data-default="1068" data-format="%d million gallons" class="TKOutput" href="#a411cce1-a1fe-d734-964e-1ed613e34a7f"></a></p>
+  </li>
+  <li>
+    <p><span data-var="dollars_per_gallon" data-type="reference" class="TKLabel" data-format=""><code>dollars_per_gallon</code></span> =<span data-var="dollars_per_gallon" data-type="definition" style="margin-left: 1ch" data-min="0" data-max="10" data-step="0.01" class="TKAdjustableNumber" data-default="3" data-format="$%.2f"></span></p>
+  </li>
+  <li>
+    <p><span data-var="dollars_saved_buying_less_gas" data-type="reference" class="TKLabel" data-format=""><code>dollars_saved_buying_less_gas</code></span> = <span data-var="gallons_saved" data-type="reference" class="TKLabel" data-format=""><code>gallons_saved</code></span> * <span data-var="dollars_per_gallon" data-type="reference" class="TKLabel" data-format=""><code>dollars_per_gallon</code></span> =<span data-var="dollars_saved_buying_less_gas" data-type="definition" style="margin-left: 1ch" data-formula="gallons_saved*dollars_per_gallon/1000" class="TKOutput" id="725f890b-2db8-86dd-3fe2-d8a9bdf63b51" data-default="3" data-format="$%.1f billion"></span></p>
+  </li>
+  <li>
+    <p><span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> =<span data-var="budget" data-type="reference" data-default="3" data-format="$%.1f billion" class="TKAdjustableNumber"></span></p>
+  </li>
+  <li>
+    <p><span data-var="dollars_saved_on_balance" data-type="reference" class="TKLabel" data-format=""><code>dollars_saved_on_balance</code></span> = <span data-var="budget" data-type="reference" class="TKLabel" data-format=""><code>budget</code></span> - <span data-var="dollars_saved_buying_less_gas" data-type="reference" class="TKLabel" data-format=""><code>dollars_saved_buying_less_gas</code></span> =<span data-var="dollars_saved_on_balance" data-type="definition" style="margin-left: 1ch" data-formula="1000*dollars_saved_buying_less_gas-1000*budget" class="TKOutput" id="68b233cf-6e8c-eeee-e8d3-ce6e9b69ce19" data-default="200" data-format="$%d million"></span></p>
+    <ul>
+      <li>Note: Ok so something's not going right with this calculation here. It should be some <code>200 million</code> by default.</li>
+    </ul>
+  </li>
+  <li>
+    <p><span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> =<a data-var="tons_CO2e_saved" data-type="reference" data-default="9" data-format="%.2f million tons" class="TKOutput" href="#9e7a2da1-f7fa-d765-e2ca-f05650ed9855"></a></p>
+  </li>
+  <li>
+    <p><span data-var="dollars_per_ton_CO2e_on_balance" data-type="reference" class="TKLabel" data-format=""><code>dollars_per_ton_CO2e_on_balance</code></span> = <span data-var="dollars_saved_on_balance" data-type="reference" class="TKLabel" data-format=""><code>dollars_saved_on_balance</code></span> / <span data-var="tons_CO2e_saved" data-type="reference" class="TKLabel" data-format=""><code>tons_CO2e_saved</code></span> =<span data-var="dollars_per_ton_CO2e_on_balance" data-type="definition" style="margin-left: 1ch" data-formula="dollars_saved_on_balance/tons_CO2e_saved" class="TKOutput" id="58983c3e-1e34-a6a4-5c44-58d0767eff68" data-default="20" data-format="$%.0f"></span></p>
+  </li>
+</ul>
+<script type="text/javascript" src="https://pagecdn.io/lib/mathjs/9.4.4/math.min.js"></script>
+<script type="text/javascript" src="http://worrydream.com/Tangle/Tangle.js"></script>
+<script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/TangleKit.js"></script>
+<script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/sprintf.js"></script>
+<script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/mootools.js"></script>
+<script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/BVTouchable.js"></script>
+<link href="http://worrydream.com/Tangle/TangleKit/TangleKit.css" type="text/css" rel="stylesheet">
+<style>.TKOutput { color: #4eabff; border-bottom: 1px dashed #4eabff;}
 .TKOutput:hover { background-color: #e3eef3;}
 .TKOutput:active { background-color: #4eabff; color: #fff; }
 a.TKOutput { text-decoration: none; }
-
 .TKAdjustableNumberHelp { color: #0dbe04!important }
 .TKAdjustableNumber { color: #0dbe04; border-bottom: 1px dashed #0dbe04 }
 .TKAdjustableNumber:hover { background-color: #e4ffed }
 .TKAdjustableNumber:active { background-color: #66c563; color: #fff; }
-
 .TKLabel pre {
-  margin-top: 0;
-  margin-bottom: 0;
+margin-top: 0;
+margin-bottom: 0;
 }
-.TKLabel { 
-  color: #fff; 
-  display: inline-block;
-  text-align: center;
-  line-height: 1.0;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 2px;
-  padding-bottom: 3px;
-  border-radius: 20px;
-  border-radius: 20px
-  border: 1px solid #85abbd;
-  background-color: #91b9cc;
-  width: "100%";
-  # flex: 1;
-  # display: flex;
-  # text-align: center;
-  # justify-content: center;
+.TKLabel {
+color: #fff;
+display: inline-block;
+text-align: center;
+line-height: 1.0;
+padding-left: 8px;
+padding-right: 8px;
+padding-top: 2px;
+padding-bottom: 3px;
+border-radius: 20px;
+border-radius: 20px
+border: 1px solid #85abbd;
+background-color: #91b9cc;
+width: "100%";
+# flex: 1;
+# display: flex;
+# text-align: center;
+# justify-content: center;
 }
 .TKLabel:hover {
-  background-color: #5f9bb6;
-  border-color: #6a828e;
+background-color: #5f9bb6;
+border-color: #6a828e;
 }
-
 .TKLabel span {
-  display: none;
+display: none;
+}</style>
+<script type="text/javascript">var tangle = new Tangle (document.body, {
+initialize: function () {
+this.budget = 3;
+this.old_MPG_limit = 17;
+this.new_MPG_limit = 24;
+this.rebate = 3500;
+this.cookies = 3;
+this.calories = 150;
+this.daily_calories = 2000;
+this.daily_percent = 0.07;
+this.overhead = 100;
+this.cars_traded = 828571;
+this.average_current_MPG = 21;
+this.var_current_MPG = 25;
+this.average_old_MPG = 14;
+this.average_new_MPG = 24;
+this.var_new_MPG = 5;
+this.car_lifetime_miles = 150000;
+this.average_percent_miles_left = 0.25;
+this.average_miles_left = 37;
+this.gallons_used_by_old_car = 2662;
+this.gallons_used_by_new_car = 1373;
+this.gallons_saved_per_car = 1289;
+this.gallons_saved = 1068;
+this.gallons_consumed_per_day = 378;
+this.gallons_consumed_per_hour = 16;
+this.hours_of_gas = 68;
+this.kg_CO2_per_gallon_gas = 8;
+this.tons_CO2_saved = 9;
+this.CO2_per_CO2e = 0.9500000000000001;
+this.tons_CO2e_saved = 9;
+this.tons_CO2e_emitted_yearly = 6983;
+this.percent_annual_emissions = 0;
+this.dollars_per_ton_CO2e = 301;
+this.dollars_per_gallon = 3;
+this.dollars_saved_buying_less_gas = 3;
+this.dollars_saved_on_balance = 200;
+this.dollars_per_ton_CO2e_on_balance = 20;
+},
+update: function () {
+var scope = {budget: this.budget, old_MPG_limit: this.old_MPG_limit, new_MPG_limit: this.new_MPG_limit, rebate: this.rebate, cookies: this.cookies, calories: this.calories, daily_calories: this.daily_calories, daily_percent: this.daily_percent, overhead: this.overhead, cars_traded: this.cars_traded, average_current_MPG: this.average_current_MPG, var_current_MPG: this.var_current_MPG, average_old_MPG: this.average_old_MPG, average_new_MPG: this.average_new_MPG, var_new_MPG: this.var_new_MPG, car_lifetime_miles: this.car_lifetime_miles, average_percent_miles_left: this.average_percent_miles_left, average_miles_left: this.average_miles_left, gallons_used_by_old_car: this.gallons_used_by_old_car, gallons_used_by_new_car: this.gallons_used_by_new_car, gallons_saved_per_car: this.gallons_saved_per_car, gallons_saved: this.gallons_saved, gallons_consumed_per_day: this.gallons_consumed_per_day, gallons_consumed_per_hour: this.gallons_consumed_per_hour, hours_of_gas: this.hours_of_gas, kg_CO2_per_gallon_gas: this.kg_CO2_per_gallon_gas, tons_CO2_saved: this.tons_CO2_saved, CO2_per_CO2e: this.CO2_per_CO2e, tons_CO2e_saved: this.tons_CO2e_saved, tons_CO2e_emitted_yearly: this.tons_CO2e_emitted_yearly, percent_annual_emissions: this.percent_annual_emissions, dollars_per_ton_CO2e: this.dollars_per_ton_CO2e, dollars_per_gallon: this.dollars_per_gallon, dollars_saved_buying_less_gas: this.dollars_saved_buying_less_gas, dollars_saved_on_balance: this.dollars_saved_on_balance, dollars_per_ton_CO2e_on_balance: this.dollars_per_ton_CO2e_on_balance}
+this.calories = math.evaluate("50*cookies", scope);
+this.daily_percent = math.evaluate("calories/daily_calories", scope);
+this.cars_traded = math.evaluate("(budget-overhead/1000)*1000000000/rebate", scope);
+this.average_old_MPG = math.evaluate("old_MPG_limit*(average_current_MPG/20)", scope);
+this.average_new_MPG = math.evaluate("new_MPG_limit*(1+average_current_MPG/30)", scope);
+this.average_miles_left = math.evaluate("average_percent_miles_left*car_lifetime_miles", scope);
+this.gallons_used_by_old_car = math.evaluate("average_miles_left/average_old_MPG", scope);
+this.gallons_used_by_new_car = math.evaluate("average_miles_left/average_new_MPG", scope);
+this.gallons_saved_per_car = math.evaluate("gallons_used_by_old_car-gallons_used_by_new_car", scope);
+this.gallons_saved = math.evaluate("gallons_saved_per_car*cars_traded/1000000", scope);
+this.gallons_consumed_per_hour = math.evaluate("gallons_consumed_per_day/24", scope);
+this.hours_of_gas = math.evaluate("gallons_saved/gallons_consumed_per_hour", scope);
+this.tons_CO2_saved = math.evaluate("gallons_saved*kg_CO2_per_gallon_gas/1000", scope);
+this.tons_CO2e_saved = math.evaluate("tons_CO2_saved/CO2_per_CO2e", scope);
+this.percent_annual_emissions = math.evaluate("tons_CO2e_saved/tons_CO2e_emitted_yearly*100", scope);
+this.dollars_per_ton_CO2e = math.evaluate("budget*1000/tons_CO2e_saved", scope);
+this.dollars_saved_buying_less_gas = math.evaluate("gallons_saved*dollars_per_gallon/1000", scope);
+this.dollars_saved_on_balance = math.evaluate("1000*dollars_saved_buying_less_gas-1000*budget", scope);
+this.dollars_per_ton_CO2e_on_balance = math.evaluate("dollars_saved_on_balance/tons_CO2e_saved", scope);
 }
-
-
-</style></pre>
-<pre><script type="text/javascript">   
-var tangle = new Tangle (document.body, {
-  initialize: function () {
-    this.cookies = 3;
-    this.calories_per_cookie = 50;
-    this.calories = 150;
-    this.calories_per_day = 2000;
-    this.daily_percent = -1; 
-  },
-  update: function () {
-    var scope = {cookies: this.cookies, calories_per_cookie: this.calories_per_cookie, calories: this.calories, calories_per_day: this.calories_per_day, daily_percent: this.daily_percent}   
-    this.calories = math.evaluate("calories_per_cookie*cookies", scope);
-    this.daily_percent = math.evaluate("calories/calories_per_day", scope);
-  }  
-});
-
-</script></pre>
+});</script>
+<section data-footnotes class="footnotes">
+  <h2 id="footnote-label" class="sr-only">Footnotes</h2>
+  <ol>
+    <li id="user-content-fn-1">
+      <p>The difference is that I haven't yet added the possibility of inputting a distribution. So the calculations for average MPG of old versus new cars is less precise than in Victor's case. (On the flip side, this coarser model is easier to modify for today's transportation fleet.) <a href="#user-content-fnref-1" data-footnote-backref class="data-footnote-backref" aria-label="Back to content">↩</a> <a href="#user-content-fnref-1-2" data-footnote-backref class="data-footnote-backref" aria-label="Back to content">↩<sup>2</sup></a></p>
+    </li>
+    <li id="user-content-fn-2">
+      <p>It's a little confusing that <code>cookies</code> shows up on both the left- and right-hand sides. On the right-hand side, it has a semantic purpose: defining the variable <code>cookies</code>. On the left-hand side it has a purely stylistic purpose (to inform the reader what units we're using). <a href="#user-content-fnref-2" data-footnote-backref class="data-footnote-backref" aria-label="Back to content">↩</a></p>
+    </li>
+    <li id="user-content-fn-3">
+      <p>Note: <code>%'d</code> is actually nonstandard. It puts commas (or periods) in the thousands places (depending on your locale). Another useful nonstandard addition is <code>+</code> or <code>-</code> for optionally separating the amount and magnitude as in <code>-$20</code>. <a href="#user-content-fnref-3" data-footnote-backref class="data-footnote-backref" aria-label="Back to content">↩</a></p>
+    </li>
+  </ol>
+</section>
 

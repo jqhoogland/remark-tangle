@@ -51,6 +51,14 @@ That's [7.5%](daily_percent&margin-right=0.5ch) of your recommended daily calori
 The project exports a plugin from `/dist/index.js` that you should use after `remarkParse` and before `remarkRehype`.
 
 
+## How to use
+
+To get this to work with Next.js, I've had to downgrade `hastscript -> hastscript@^6.0.0` and `unist-util-visit@^2.0.1`.
+
+The unified plugin ecosystem is making a push to full esm modules, but `next.config.js` only allows `require` imports.
+
+When `next.js` makes the transition, I'll deprecate the commonjs build. 
+
 ## Notation
 
 The default notation takes advantage of link notation to provide a clean fallback in standard markdown. 

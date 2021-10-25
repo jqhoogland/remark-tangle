@@ -7,7 +7,7 @@ import rehypeFormat from 'rehype-format';
 import rehypeStringify from 'rehype-stringify';
 import remarkGfm from "remark-gfm";
 
-import tanglePlugin from './tanglePlugin';
+import tanglePlugin from '../dist';
 
 const buffer = fs.readFileSync('./demo/example.md');
 
