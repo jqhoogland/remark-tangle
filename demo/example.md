@@ -1,5 +1,7 @@
 ## Interactive Writing: A plea for better communication
 
+> Note: You can find the interactive version [here](https://jessehoogland.com/articles/post-rhetoric).
+
 A few years ago, I first read the excellent essay by Bret Victor, "[What can a technologist do about climate change?](http://worrydream.com/ClimateChange/)." For its treatment of climate change alone, I can't recommend the essay enough—there's food for thought to keep you satiated for a few months. But, then, near the end, Victor sneaks in a little section titled ["Model-driven debate"](http://worrydream.com/ClimateChange/#media-debate) that has has kept me thinking *for years*. 
 
 
