@@ -1,6 +1,6 @@
 {
   "name": "remark-tangle",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A remark plugin for making interactive markdown documents with Tangle.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
