@@ -39,12 +39,13 @@ That's [7.5%](daily_percent&margin-right=0.5ch) of your recommended daily calori
 >
 > |  Calculation for daily % |                         |
 > | ----------------------- | ----------------------- |
-| [`cookies`](cookies) | = [5 cookies](cookies&margin-left=1ch) |
-| [`calories_per_cookie`](calories_per_cookie) | = [50 calories](calories_per_cookie=[10..100;5]&margin-left=1ch) | 
-| [`calories`](calories) | = [`calories_per_cookie`](calories_per_cookie&margin-left=1ch&margin-right=1ch)*[`cookies`](cookies&margin-left=1ch&margin-right=1ch) = [150 calories](calories=calories_per_cookie*cookies&margin-left=1ch) |
-| [`calories_per_day`](calories_per_day) | = [2000 calories](calories_per_day=[0..10000;100]&margin-left=1ch) |
-| [`daily_percent`](daily_percent) | = [`calories`](calories&margin-left=1ch&margin-right=1ch)/[`calories_per_day`](calories_per_day&margin-left=1ch&margin-right=1ch) = [7.5%](daily_percent=calories/calories_per_day&margin-left=1ch) |
+> | [`cookies`](cookies) | = [5 cookies](cookies&margin-left=1ch) |
+> | [`calories_per_cookie`](calories_per_cookie) | = [50 calories](calories_per_cookie=[10..100;5]&margin-left=1ch) | 
+> | [`calories`](calories) | = [`calories_per_cookie`](calories_per_cookie&margin-left=1ch&margin-right=1ch)*[`cookies`](cookies&margin-left=1ch&margin-right=1ch) = [150 calories](calories=calories_per_cookie*cookies&margin-left=1ch) |
+> | [`calories_per_day`](calories_per_day) | = [2000 calories](calories_per_day=[0..10000;100]&margin-left=1ch) |
+> | [`daily_percent`](daily_percent) | = [`calories`](calories&margin-left=1ch&margin-right=1ch)/[`calories_per_day`](calories_per_day&margin-left=1ch&margin-right=1ch) = [7.5%](daily_percent=calories/calories_per_day&margin-left=1ch) |
 
+For a more in-depth example, [take a look at this post introducing remark-tangle](https://jessehoogland.com/articles/post-rhetoric).
 
 ## Structure
 
